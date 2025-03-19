@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom"
 import { Layout, Menu, Badge, Input, Typography, Space } from "antd"
 import { ShoppingCartOutlined, UserOutlined, SearchOutlined } from "@ant-design/icons"
-// Fix the logo import
-import logo from "../assets/logo.png" // This will be created
 
 const { Header } = Layout
 const { Search } = Input
@@ -11,7 +9,7 @@ const { Text } = Typography
 const AppHeader = () => {
   return (
     <>
-      {/* Top Banner */}
+      {/* Top Banner
       <div
         style={{
           backgroundColor: "#b08d44",
@@ -22,11 +20,14 @@ const AppHeader = () => {
         }}
       >
         Ramadan Special Offer Buy 3 attars @ ₹899!
-      </div>
+      </div> */}
 
       {/* Main Header */}
       <Header
         style={{
+          position: "fixed",
+          zIndex: 1000,
+          width: "100%",
           background: "#fff",
           padding: "15px 50px",
           display: "flex",
@@ -36,8 +37,14 @@ const AppHeader = () => {
         }}
       >
         <div className="logo">
-          <Link to="/">
-            <img src={logo || "/placeholder.svg"} alt="AdilQadri" style={{ height: "40px" }} />
+          <Link to="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              color: "#000",
+              textDecoration: "none",
+            }}>
+            <img src="/images/logo.png" alt="UHI" style={{ height: "40px" }} />
           </Link>
         </div>
 

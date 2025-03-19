@@ -1,133 +1,171 @@
-import { Layout, Row, Col, Typography, Space, Divider } from "antd"
-import { Link } from "react-router-dom"
-import {
-  FacebookOutlined,
-  TwitterOutlined,
-  InstagramOutlined,
-  YoutubeOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  HomeOutlined,
-} from "@ant-design/icons"
+import { FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
 
-const { Footer } = Layout
-const { Title, Text, Paragraph } = Typography
+const styles = {
+  footer: {
+    backgroundColor: '#531C1B',
+    color: 'white',
+    padding: '40px 20px',
+    fontFamily: 'Arial, sans-serif'
+  },
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '20px'
+  },
+  section: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  title: {
+    fontSize: '20px',
+    fontWeight: 'bold',
+    marginBottom: '15px'
+  },
+  contact: {
+    fontSize: '14px',
+    marginBottom: '15px',
+    lineHeight: '1.5'
+  },
+  social: {
+    display: 'flex',
+    gap: '10px'
+  },
+  link: {
+    color: 'white',
+    textDecoration: 'none',
+    fontSize: '14px',
+    transition: 'color 0.3s ease'
+  },
+  linkHover: {
+    color: '#c29358'
+  },
+  newsletter: {
+    display: 'flex',
+    marginTop: '10px'
+  },
+  input: {
+    padding: '10px',
+    width: '100%',
+    border: 'none',
+    borderRadius: '4px 0 0 4px'
+  },
+  button: {
+    padding: '10px 15px',
+    backgroundColor: '#c29358',
+    color: 'white',
+    border: 'none',
+    borderRadius: '0 4px 4px 0',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease'
+  },
+  buttonHover: {
+    backgroundColor: '#b58340'
+  },
+  bottom: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTop: '1px solid #774141',
+    paddingTop: '15px',
+    fontSize: '14px',
+    marginTop: '20px'
+  },
+  developer: {
+    color: '#b5b5b5'
+  },
+  list: {
+    padding: 0,
+    listStyle: 'none'
+  }
+};
 
-const AppFooter = () => {
+function Footer() {
   return (
-    <Footer style={{ background: "#001529", color: "white", padding: "40px 50px" }}>
-      <Row gutter={[24, 24]}>
-        <Col xs={24} sm={12} md={6}>
-          <Title level={4} style={{ color: "white" }}>
-            Medic
-          </Title>
-          <Paragraph style={{ color: "#ccc" }}>
-            Medic is a premium brand offering the best quality health and wellness products to our customers.
-            We are committed to providing the best customer service and support.
-            We are committed to providing the highest quality products at the lowest possible prices.
-            
-          </Paragraph>
-          <Space>
-            <Link to="#">
-              <FacebookOutlined style={{ color: "white", fontSize: "20px" }} />
-            </Link>
-            <Link to="#">
-              <TwitterOutlined style={{ color: "white", fontSize: "20px" }} />
-            </Link>
-            <Link to="#">
-              <InstagramOutlined style={{ color: "white", fontSize: "20px" }} />
-            </Link>
-            <Link to="#">
-              <YoutubeOutlined style={{ color: "white", fontSize: "20px" }} />
-            </Link>
-          </Space>
-        </Col>
+    <footer style={styles.footer}>
+      <div style={styles.container}>
+        {/* Left Section */}
+        <div style={styles.section}>
+          <h2 style={styles.title}>ORGANICSTORE®</h2>
+          <div style={styles.contact}>
+            📞 +91 8885978692  
+            <br />
+            ✉️ info@organicstore.com
+          </div>
+          <div style={styles.social}>
+            <a href="#" style={styles.link} onMouseOver={(e) => e.target.style.color = styles.linkHover.color} onMouseOut={(e) => e.target.style.color = styles.link.color}>
+              <FaFacebookF />
+            </a>
+            <a href="#" style={styles.link} onMouseOver={(e) => e.target.style.color = styles.linkHover.color} onMouseOut={(e) => e.target.style.color = styles.link.color}>
+              <FaInstagram />
+            </a>
+            <a href="#" style={styles.link} onMouseOver={(e) => e.target.style.color = styles.linkHover.color} onMouseOut={(e) => e.target.style.color = styles.link.color}>
+              <FaYoutube />
+            </a>
+          </div>
+        </div>
 
-        <Col xs={24} sm={12} md={6}>
-          <Title level={4} style={{ color: "white" }}>
-            Quick Links
-          </Title>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/" style={{ color: "#ccc" }}>
-                Home
-              </Link>
-            </li>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/about" style={{ color: "#ccc" }}>
-                About Us
-              </Link>
-            </li>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/products" style={{ color: "#ccc" }}>
-                Products
-              </Link>
-            </li>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/contact" style={{ color: "#ccc" }}>
-                Contact Us
-              </Link>
-            </li>
+        {/* Categories Section */}
+        <div style={styles.section}>
+          <h3 style={styles.title}>CATEGORIES</h3>
+          <ul style={styles.list}>
+            {[
+              'Buy 3 Attars at ₹899', 'Attar', 'Perfume Spray', 
+              'Royal Attar Perfume', 'Body Spray', 'Bakhoor', 
+              'Incense Sticks', 'New Arrival', 'Diffuser Oil', 
+              'Track Order', 'Return Your Order', 'Store Locator'
+            ].map((item) => (
+              <li key={item}>
+                <a href="#" style={styles.link} onMouseOver={(e) => e.target.style.color = styles.linkHover.color} onMouseOut={(e) => e.target.style.color = styles.link.color}>
+                  {item}
+                </a>
+              </li>
+            ))}
           </ul>
-        </Col>
+        </div>
 
-        <Col xs={24} sm={12} md={6}>
-          <Title level={4} style={{ color: "white" }}>
-            Customer Service
-          </Title>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/track-order" style={{ color: "#ccc" }}>
-                Track Order
-              </Link>
-            </li>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/return-order" style={{ color: "#ccc" }}>
-                Return Policy
-              </Link>
-            </li>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/shipping" style={{ color: "#ccc" }}>
-                Shipping Info
-              </Link>
-            </li>
-            <li style={{ marginBottom: "10px" }}>
-              <Link to="/faq" style={{ color: "#ccc" }}>
-                FAQs
-              </Link>
-            </li>
+        {/* Quick Links Section */}
+        <div style={styles.section}>
+          <h3 style={styles.title}>QUICK LINKS</h3>
+          <ul style={styles.list}>
+            {[
+              'Track Order', 'Account', 'About Us', 'Contact Us', 
+              'Store Locator', 'Refunds & Cancellations Policy', 
+              'Terms of Service', 'Privacy Policy', 'Return Your Order'
+            ].map((item) => (
+              <li key={item}>
+                <a href="#" style={styles.link} onMouseOver={(e) => e.target.style.color = styles.linkHover.color} onMouseOut={(e) => e.target.style.color = styles.link.color}>
+                  {item}
+                </a>
+              </li>
+            ))}
           </ul>
-        </Col>
+        </div>
 
-        <Col xs={24} sm={12} md={6}>
-          <Title level={4} style={{ color: "white" }}>
-            Contact Us
-          </Title>
-          <Space direction="vertical" style={{ color: "#ccc" }}>
-            <Space>
-              <HomeOutlined />
-              <Text style={{ color: "#ccc" }}>123 Main Street, Mumbai, India</Text>
-            </Space>
-            <Space>
-              <PhoneOutlined />
-              <Text style={{ color: "#ccc" }}>+91 9876543210</Text>
-            </Space>
-            <Space>
-              <MailOutlined />
-              <Text style={{ color: "#ccc" }}>info@adilqadri.com</Text>
-            </Space>
-          </Space>
-        </Col>
-      </Row>
-
-      <Divider style={{ borderColor: "#333", margin: "24px 0" }} />
-
-      <div style={{ textAlign: "center" }}>
-        <Text style={{ color: "#ccc" }}>© {new Date().getFullYear()} AdilQadri. All Rights Reserved.</Text>
+        {/* Newsletter Section */}
+        <div style={styles.section}>
+          <h3 style={styles.title}>NEWSLETTER</h3>
+          <p>A short sentence describing what someone will receive by subscribing.</p>
+          <div style={styles.newsletter}>
+            <input type="email" placeholder="Enter Your Email" style={styles.input} />
+            <button
+              style={styles.button}
+              onMouseOver={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor}
+              onMouseOut={(e) => e.target.style.backgroundColor = styles.button.backgroundColor}
+            >
+              ➔
+            </button>
+          </div>
+        </div>
       </div>
-    </Footer>
-  )
+
+      {/* Bottom Section */}
+      <div style={styles.bottom}>
+        <div>India (INR ₹)</div>
+        <div>© 2025 Organic Store | All Rights Reserved</div>
+        <div style={styles.developer}>Developed by Lexcorp Softwares</div>
+      </div>
+    </footer>
+  );
 }
 
-export default AppFooter
-
+export default Footer;

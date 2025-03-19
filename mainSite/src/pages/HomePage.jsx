@@ -2,7 +2,7 @@ import { Layout, Carousel, Card, Row, Col, Typography, Button, Rate } from "antd
 import { ShoppingOutlined } from "@ant-design/icons"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-
+import WhyUs from "../components/WhyUs"
 const { Content } = Layout
 const { Title, Text } = Typography
 const { Meta } = Card
@@ -77,12 +77,12 @@ const HomePage = () => {
 
       <Content>
         {/* Hero Carousel */}
-        <Carousel autoplay>
+        <Carousel autoplay autoplaySpeed={3000} pauseOnHover={false}>
           <div>
             <div
               style={{
                 height: "500px",
-                background: "url(https://plus.unsplash.com/premium_photo-1672759455907-bdaef741cd88?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWVkaWNkaW5lfGVufDB8fDB8fHww?height=500&width=1200) center center no-repeat",
+                background: "url(/images/p2.avif) center center no-repeat",
                 backgroundSize: "cover",
                 display: "flex",
                 alignItems: "center",
@@ -107,7 +107,7 @@ const HomePage = () => {
             <div
               style={{
                 height: "500px",
-                background: "url(https://picsum.photos/500/1200?height=500&width=1200) center center no-repeat",
+                background: "url(/images/p1.avif) center center no-repeat",
                 backgroundSize: "cover",
                 display: "flex",
                 alignItems: "center",
@@ -131,7 +131,7 @@ const HomePage = () => {
             <div
               style={{
                 height: "500px",
-                background: "url(https://picsum.photos/500/1200?height=500&width=1200) center center no-repeat",
+                background: "url(/images/s1.avif) center center no-repeat",
                 backgroundSize: "cover",
                 display: "flex",
                 alignItems: "center",
@@ -155,7 +155,7 @@ const HomePage = () => {
             <div
               style={{
                 height: "500px",
-                background: "url(https://picsum.photos/500/1200?height=500&width=1200) center center no-repeat",
+                background: "url(/images/s2.avif) center center no-repeat",
                 backgroundSize: "cover",
                 display: "flex",
                 alignItems: "center",
@@ -180,7 +180,7 @@ const HomePage = () => {
             <div
               style={{
                 height: "500px",
-                background: "url(https://picsum.photos/500/1200?height=500&width=1200) center center no-repeat",
+                background: "url(/images/s3.avif) center center no-repeat",
                 backgroundSize: "cover",
                 display: "flex",
                 alignItems: "center",
@@ -367,7 +367,7 @@ const HomePage = () => {
                   <Rate disabled defaultValue={5} />
                 </div>
                 <Text style={{ display: "block", marginBottom: "15px" }}>
-                  "I've been using AdilQadri products for years and they never disappoint. The quality is consistently
+                  "I've been using UHI products for years and they never disappoint. The quality is consistently
                   excellent."
                 </Text>
                 <div style={{ textAlign: "right" }}>
@@ -392,7 +392,7 @@ const HomePage = () => {
           </Row>
         </div>
       </Content>
-
+      <WhyUs/>
       <Footer />
     </Layout>
   )

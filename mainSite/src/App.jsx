@@ -7,7 +7,7 @@ import CheckoutPage from "./pages/CheckoutPage"
 import TrackOrderPage from "./pages/TrackOrderPage"
 import ReturnOrderPage from "./pages/ReturnOrderPage"
 import StoreLocatorPage from "./pages/StoreLocatorPage"
-
+import ProductsPage from "./pages/ProductsPage/ProductsPage"
 
 // Custom theme configuration for Ant Design
 const theme = {
@@ -34,7 +34,18 @@ function App() {
           <Route path="/track-order" element={<TrackOrderPage />} />
           <Route path="/return-order" element={<ReturnOrderPage />} />
           <Route path="/store-locator" element={<StoreLocatorPage />} />
-
+          <Route path="/buy-3-attars" element={<ProductsPage/>} />
+          <Route path="/attar" element={<ProductsPage/>} />
+          <Route path="/perfume-spray" element={<ProductsPage/>} />
+          <Route path="/royal-attar" element={<ProductsPage/>} />
+          <Route path="/body-spray" element={<ProductsPage/>} />
+          <Route path="/bakhoor" element={<ProductsPage/>} />
+          <Route path="/incense-sticks" element={<ProductsPage/>} />
+          <Route path="/new-arrival" element={<ProductsPage/>} />
+          <Route path="/diffuser-oil" element={<ProductsPage/>} />
+          <Route path="*" element={<h1 style={
+            {textAlign: "center", marginTop: "100px"}
+          }>404 Not Found</h1>} />
           
         </Routes>
       </Router>
