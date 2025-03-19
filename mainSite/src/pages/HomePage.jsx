@@ -76,322 +76,218 @@ const HomePage = () => {
       <Header />
 
       <Content>
-        {/* Hero Carousel */}
-        <Carousel autoplay autoplaySpeed={3000} pauseOnHover={false}>
-          <div>
-            <div
-              style={{
-                height: "500px",
-                background: "url(/images/p2.avif) center center no-repeat",
-                backgroundSize: "cover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              <Title level={1} style={{ color: "white" }}>
-                Premium Attars & Perfumes Oh Yeah
-              </Title>
-              <Text style={{ color: "white", fontSize: "18px", marginBottom: "20px" }}>
-                Discover the finest collection of traditional and modern fragrances
-              </Text>
-              <Button type="primary" size="large">
-                Shop Now
-              </Button>
-            </div>
-          </div>
-          <div>
-            <div
-              style={{
-                height: "500px",
-                background: "url(/images/p1.avif) center center no-repeat",
-                backgroundSize: "cover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              <Title level={1} style={{ color: "white" }}>
-                Premium Attars & Perfumes
-              </Title>
-              <Text style={{ color: "white", fontSize: "18px", marginBottom: "20px" }}>
-                Discover the finest collection of traditional and modern fragrances
-              </Text>
-              <Button type="primary" size="large">
-                Shop Now
-              </Button>
-            </div>
-          </div> <div>
-            <div
-              style={{
-                height: "500px",
-                background: "url(/images/s1.avif) center center no-repeat",
-                backgroundSize: "cover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              <Title level={1} style={{ color: "white" }}>
-                Premium Attars & Perfumes
-              </Title>
-              <Text style={{ color: "white", fontSize: "18px", marginBottom: "20px" }}>
-                Discover the finest collection of traditional and modern fragrances
-              </Text>
-              <Button type="primary" size="large">
-                Shop Now
-              </Button>
-            </div>
-          </div> <div>
-            <div
-              style={{
-                height: "500px",
-                background: "url(/images/s2.avif) center center no-repeat",
-                backgroundSize: "cover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              <Title level={1} style={{ color: "white" }}>
-                Premium Attars & Perfumes
-              </Title>
-              <Text style={{ color: "white", fontSize: "18px", marginBottom: "20px" }}>
-                Discover the finest collection of traditional and modern fragrances
-              </Text>
-              <Button type="primary" size="large">
-                Shop Now
-              </Button>
-            </div>
-          </div>
-          <div>
-            <div
-              style={{
-                height: "500px",
-                background: "url(/images/s3.avif) center center no-repeat",
-                backgroundSize: "cover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              <Title level={1} style={{ color: "white" }}>
-                Premium Attars & Perfumes
-              </Title>
-              <Text style={{ color: "white", fontSize: "18px", marginBottom: "20px" }}>
-                Discover the finest collection of traditional and modern fragrances
-              </Text>
-              <Button type="primary" size="large">
-                Shop Now
-              </Button>
-            </div>
-          </div>
-        </Carousel>
-
-        {/* Featured Categories */}
-        <div style={{ padding: "60px 50px", background: "#fff" }}>
-          <Title level={2} style={{ textAlign: "center", marginBottom: "40px" }}>
-            Our Categories
-          </Title>
-
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Attar" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Attar" description="Traditional fragrances" />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Perfume Spray" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Perfume Spray" description="Modern scents" />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Royal Attar" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Royal Attar" description="Premium collection" />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Bakhoor" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Bakhoor" description="Exotic fragrances" />
-              </Card>
-            </Col>
-          </Row>
-        </div>
-
-        {/* Featured Products */}
-        <div style={{ padding: "60px 50px" }}>
-          <Title level={2} style={{ textAlign: "center", marginBottom: "40px" }}>
-            Featured Products
-          </Title>
-
-          <Row gutter={[24, 24]}>
-            {featuredProducts.map((product) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={product.id}>
-                <Card
-                  hoverable
-                  cover={<img alt={product.name} src={product.image || "/placeholder.svg"} />}
-                  actions={[
-                    <Button type="primary" icon={<ShoppingOutlined />} key="add-to-cart">
-                      Add to Cart
-                    </Button>,
-                  ]}
-                >
-                  <Meta
-                    title={product.name}
-                    description={
-                      <div>
-                        <Text type="secondary">{product.category}</Text>
-                        <div>
-                          <Text strong>₹{product.price}</Text>
-                        </div>
-                      </div>
-                    }
-                  />
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
-
-        {/* Banner */}
-        <div
-          style={{
-            padding: "80px 50px",
-            background: "url(/placeholder.svg?height=300&width=1200) center center no-repeat",
-            backgroundSize: "cover",
-            textAlign: "center",
-            color: "white",
+  {/* Hero Carousel */}
+  <Carousel autoplay autoplaySpeed={3000} pauseOnHover={false} effect="fade">
+    <div>
+      <div
+        style={{
+          height: "500px",
+          background: "url(/images/p2.avif) center center no-repeat",
+          backgroundSize: "cover",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          color: "white",
+          textAlign: "center",
+          transition: "all 0.8s ease-in-out",         // Smooth transition
+          opacity: "0.9",
+        }}
+      >
+        <Title
+          level={1}
+          style={{ 
+            color: "white", 
+            transform: "scale(1)", 
+            transition: "transform 0.5s ease-in-out"
           }}
         >
-          <Title level={2} style={{ color: "white" }}>
-            Special Offer
-          </Title>
-          <Text style={{ color: "white", fontSize: "18px", display: "block", marginBottom: "20px" }}>
-            Buy 3 attars at just ₹899. Limited time offer!
-          </Text>
-          <Button type="primary" size="large">
-            Shop Now
-          </Button>
-        </div>
+          Premium Attars & Perfumes Oh Yeah
+        </Title>
+        <Text
+          style={{
+            color: "white",
+            fontSize: "18px",
+            marginBottom: "20px",
+            transition: "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+            opacity: "0.9",
+          }}
+        >
+          Discover the finest collection of traditional and modern fragrances
+        </Text>
+        <Button
+          type="primary"
+          size="large"
+          style={{
+            transition: "all 0.3s ease",
+            transform: "scale(1)",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Shop Now
+        </Button>
+      </div>
+    </div>
 
-        {/* New Arrivals */}
-        <div style={{ padding: "60px 50px", background: "#fff" }}>
-          <Title level={2} style={{ textAlign: "center", marginBottom: "40px" }}>
-            New Arrivals
-          </Title>
+    <div>
+      <div
+        style={{
+          height: "500px",
+          background: "url(/images/p1.avif) center center no-repeat",
+          backgroundSize: "cover",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          color: "white",
+          textAlign: "center",
+          transition: "all 0.8s ease-in-out",
+          opacity: "0.9",
+        }}
+      >
+        <Title
+          level={1}
+          style={{
+            color: "white",
+            transform: "scale(1)",
+            transition: "transform 0.5s ease-in-out",
+          }}
+        >
+          Premium Attars & Perfumes
+        </Title>
+        <Text
+          style={{
+            color: "white",
+            fontSize: "18px",
+            marginBottom: "20px",
+            transition: "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+            opacity: "0.9",
+          }}
+        >
+          Discover the finest collection of traditional and modern fragrances
+        </Text>
+        <Button
+          type="primary"
+          size="large"
+          style={{
+            transition: "all 0.3s ease",
+            transform: "scale(1)",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Shop Now
+        </Button>
+      </div>
+    </div>
 
-          <Row gutter={[24, 24]}>
-            {newArrivals.map((product) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={product.id}>
-                <Card
-                  hoverable
-                  cover={<img alt={product.name} src={product.image || "/placeholder.svg"} />}
-                  actions={[
-                    <Button type="primary" icon={<ShoppingOutlined />} key="add-to-cart">
-                      Add to Cart
-                    </Button>,
-                  ]}
-                >
-                  <Meta
-                    title={product.name}
-                    description={
-                      <div>
-                        <Text type="secondary">{product.category}</Text>
-                        <div>
-                          <Text strong>₹{product.price}</Text>
-                        </div>
-                      </div>
-                    }
-                  />
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
+    <div>
+      <div
+        style={{
+          height: "500px",
+          background: "url(/images/s1.avif) center center no-repeat",
+          backgroundSize: "cover",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          color: "white",
+          textAlign: "center",
+          transition: "all 0.8s ease-in-out",
+          opacity: "0.9",
+        }}
+      >
+        <Title
+          level={1}
+          style={{
+            color: "white",
+            transform: "scale(1)",
+            transition: "transform 0.5s ease-in-out",
+          }}
+        >
+          Premium Attars & Perfumes
+        </Title>
+        <Text
+          style={{
+            color: "white",
+            fontSize: "18px",
+            marginBottom: "20px",
+            transition: "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+            opacity: "0.9",
+          }}
+        >
+          Discover the finest collection of traditional and modern fragrances
+        </Text>
+        <Button
+          type="primary"
+          size="large"
+          style={{
+            transition: "all 0.3s ease",
+            transform: "scale(1)",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Shop Now
+        </Button>
+      </div>
+    </div>
+    
+    <div>
+      <div
+        style={{
+          height: "500px",
+          background: "url(/images/s2.avif) center center no-repeat",
+          backgroundSize: "cover",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          color: "white",
+          textAlign: "center",
+          transition: "all 0.8s ease-in-out",
+          opacity: "0.9",
+        }}
+      >
+        <Title
+          level={1}
+          style={{
+            color: "white",
+            transform: "scale(1)",
+            transition: "transform 0.5s ease-in-out",
+          }}
+        >
+          Premium Attars & Perfumes
+        </Title>
+        <Text
+          style={{
+            color: "white",
+            fontSize: "18px",
+            marginBottom: "20px",
+            transition: "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+            opacity: "0.9",
+          }}
+        >
+          Discover the finest collection of traditional and modern fragrances
+        </Text>
+        <Button
+          type="primary"
+          size="large"
+          style={{
+            transition: "all 0.3s ease",
+            transform: "scale(1)",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Shop Now
+        </Button>
+      </div>
+    </div>
+  </Carousel>
+</Content>
 
-        {/* Testimonials */}
-        <div style={{ padding: "60px 50px" }}>
-          <Title level={2} style={{ textAlign: "center", marginBottom: "40px" }}>
-            What Our Customers Say
-          </Title>
-
-          <Row gutter={[24, 24]} justify="center">
-            <Col xs={24} sm={12} md={8}>
-              <Card style={{ height: "100%" }}>
-                <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                  <Rate disabled defaultValue={5} />
-                </div>
-                <Text style={{ display: "block", marginBottom: "15px" }}>
-                  "The Royal Attar Perfume is absolutely amazing! The fragrance lasts all day and I've received so many
-                  compliments."
-                </Text>
-                <div style={{ textAlign: "right" }}>
-                  <Text strong>- Rahul S.</Text>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8}>
-              <Card style={{ height: "100%" }}>
-                <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                  <Rate disabled defaultValue={5} />
-                </div>
-                <Text style={{ display: "block", marginBottom: "15px" }}>
-                  "I've been using UHI products for years and they never disappoint. The quality is consistently
-                  excellent."
-                </Text>
-                <div style={{ textAlign: "right" }}>
-                  <Text strong>- Priya M.</Text>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8}>
-              <Card style={{ height: "100%" }}>
-                <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                  <Rate disabled defaultValue={5} />
-                </div>
-                <Text style={{ display: "block", marginBottom: "15px" }}>
-                  "The Bakhoor collection is exceptional. The fragrances are authentic and remind me of traditional
-                  Arabian scents."
-                </Text>
-                <div style={{ textAlign: "right" }}>
-                  <Text strong>- Ahmed K.</Text>
-                </div>
-              </Card>
-            </Col>
-          </Row>
-        </div>
-      </Content>
       <WhyUs/>
       <Footer />
     </Layout>
