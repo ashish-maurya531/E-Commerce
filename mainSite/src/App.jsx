@@ -46,7 +46,9 @@ function App() {
           <Route path="*" element={<h1 style={
             {textAlign: "center", marginTop: "100px"}
           }>404 Not Found</h1>} />
-          
+          {
+            // Add more routes here
+          }
         </Routes>
       </Router>
     </ConfigProvider>
