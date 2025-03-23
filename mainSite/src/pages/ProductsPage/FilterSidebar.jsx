@@ -1,5 +1,5 @@
 "use client"
-import "./FilterSidebar.css"
+import "../../styles/FilterSidebar.css"
 
 function FilterSidebar({ onClose, onCategoryChange, selectedCategory, onClearFilters }) {
   const categories = [

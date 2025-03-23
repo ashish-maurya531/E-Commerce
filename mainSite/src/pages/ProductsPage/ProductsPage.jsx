@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import ProductCard from "./ProductCard"
 import FilterSidebar from "./FilterSidebar"
-import "./ProductsPage.css"
+import "../../styles/ProductsPage.css"
 import Header from "../../components/Header"
 import Footer from "../../components/Footer"
 

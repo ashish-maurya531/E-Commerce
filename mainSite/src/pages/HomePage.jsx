@@ -8,6 +8,28 @@ const { Title, Text } = Typography
 const { Meta } = Card
 
 const HomePage = () => {
+  const categories = [
+    {
+      title: "Attar",
+      description: "Traditional fragrances",
+      image: "/placeholder.svg?height=200&width=200",
+    },
+    {
+      title: "Perfume Spray",
+      description: "Modern scents",
+      image: "/placeholder.svg?height=200&width=200",
+    },
+    {
+      title: "Royal Attar",
+      description: "Premium collection",
+      image: "/placeholder.svg?height=200&width=200",
+    },
+    {
+      title: "Bakhoor",
+      description: "Exotic fragrances",
+      image: "/placeholder.svg?height=200&width=200",
+    },
+  ];
   // Sample product data
   const featuredProducts = [
     {
@@ -288,49 +310,24 @@ const HomePage = () => {
 
         {/* Featured Categories */}
         <div style={{ padding: "60px 50px", background: "#fff" }}>
-          <Title level={2} style={{ textAlign: "center", marginBottom: "40px" }}>
-            Our Categories
-          </Title>
+      <Title level={2} style={{ textAlign: "center", marginBottom: "40px" }}>
+        Our Categories
+      </Title>
 
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Attar" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Attar" description="Traditional fragrances" />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Perfume Spray" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Perfume Spray" description="Modern scents" />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Royal Attar" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Royal Attar" description="Premium collection" />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={<img alt="Bakhoor" src="/placeholder.svg?height=200&width=200" />}
-                style={{ textAlign: "center" }}
-              >
-                <Meta title="Bakhoor" description="Exotic fragrances" />
-              </Card>
-            </Col>
-          </Row>
-        </div>
+      <Row gutter={[24, 24]}>
+        {categories.map((category, index) => (
+          <Col key={index} xs={24} sm={12} md={8} lg={6}>
+            <Card
+              hoverable
+              cover={<img alt={category.title} src={category.image} />}
+              style={{ textAlign: "center" }}
+            >
+              <Meta title={category.title} description={category.description} />
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </div>
 
         {/* Featured Products */}
         <div style={{ padding: "60px 50px" }}>

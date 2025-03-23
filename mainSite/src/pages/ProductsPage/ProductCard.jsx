@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import "./ProductCard.css"
+import "../../styles/ProductCard.css"
 
 function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false)
