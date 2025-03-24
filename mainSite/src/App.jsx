@@ -33,16 +33,7 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/store-locator" element={<ProductsPage />} />
-          <Route path="/buy-3-attars" element={<ProductsPage />} />
-          <Route path="/attar" element={<ProductsPage />} />
-          <Route path="/perfume-spray" element={<ProductsPage />} />
-          <Route path="/royal-attar" element={<ProductsPage />} />
-          <Route path="/body-spray" element={<ProductsPage />} />
-          <Route path="/bakhoor" element={<ProductsPage />} />
-          <Route path="/incense-sticks" element={<ProductsPage />} />
-          <Route path="/new-arrival" element={<ProductsPage />} />
-          <Route path="/diffuser-oil" element={<ProductsPage />} />
+          <Route path="/category/:categoryName" element={<ProductsPage />} />
           <Route path="/store-locator" element={<StoreLocatorPage />} />
           <Route path="/product/:id" element={<ProductDetailPage />} />
           {/* Protected Routes */}

@@ -1,26 +1,18 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"
-import { Layout, Menu, Badge, Input, Typography, Space } from "antd"
-import { ShoppingCartOutlined, UserOutlined, SearchOutlined,LogoutOutlined } from "@ant-design/icons"
+import { Link, useNavigate } from "react-router-dom";
+import { Layout, Menu, Space } from "antd";
+import { ShoppingCartOutlined, UserOutlined, SearchOutlined, LogoutOutlined } from "@ant-design/icons";
 import CartDrawer from "./CartDrawer";
+import "../styles/AppHeader.css"; // Import CSS file
 
-const { Header } = Layout
-const { Search } = Input
-const { Text } = Typography
-const menuItemStyle = {
-  padding: "0px -30px",
-  margin: "0px 15px",
-  cursor: "pointer",
-  fontSize: "12px",
-  transition: "background 0.2s",
-};
+const { Header } = Layout;
+
 const AppHeader = () => {
-  const isAuthenticated = !! localStorage.getItem("authToken"); // Check if user is logged in
+  const isAuthenticated = !!localStorage.getItem("authToken");
   const [showDropdown, setShowDropdown] = useState(false);
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
   const navigate = useNavigate();
-
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -31,15 +23,15 @@ const AppHeader = () => {
     };
 
     updateCartCount();
-
-    // Listen for cart updates from other components
     window.addEventListener("storage", updateCartCount);
-  });
+    return () => window.removeEventListener("storage", updateCartCount);
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken"); // Remove authentication token
-    navigate("/auth"); // Redirect to login page
+    localStorage.removeItem("authToken");
+    navigate("/auth");
   };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -49,148 +41,80 @@ const AppHeader = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   return (
     <>
-      {/* Top Banner
-      <div
-        style={{
-          backgroundColor: "#b08d44",
-          color: "white",
-          padding: "8px 0",
-          textAlign: "center",
-          fontWeight: "bold",
-        }}
-      >
-        Ramadan Special Offer Buy 3 attars @ ₹899!
-      </div> */}
-
-      {/* Main Header */}
-      <Header
-        style={{
-          position: "fixed",
-          zIndex: 1000,
-          width: "100%",
-          background: "#fff",
-          padding: "15px 50px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderBottom: "1px solid #f0f0f0",
-        }}
-      >
+      <Header className="app-header">
         <div className="logo">
-          <Link to="/"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              color: "#000",
-              textDecoration: "none",
-            }}>
-            <img src="/images/logo.png" alt="UHI" style={{ height: "40px" }} />
+          <Link to="/">
+            <img src="/images/logo.png" alt="UHI" className="logo-img" />
           </Link>
         </div>
 
-        <Menu mode="horizontal" style={{ border: "none", flex: 1, justifyContent: "center" }}>
-          <Menu.Item key="buy3">
-            <Link to="/buy-3-attars">Buy 3 Attars at ₹899</Link>
-          </Menu.Item>
-          <Menu.Item key="attar">
-            <Link to="/category/attar">Attar</Link>
-          </Menu.Item>
-          <Menu.Item key="perfume">
-            <Link to="/category/perfume-spray">Perfume Spray</Link>
-          </Menu.Item>
-          <Menu.Item key="royal">
-            <Link to="/category/royal-attar">
-              <span
-                style={{
-                  backgroundColor: "#f5f5dc",
-                  padding: "2px 8px",
-                  borderRadius: "2px",
-                  marginRight: "5px",
-                }}
-              >
-                Trending
-              </span>
-              Royal Attar Perfume
+        <Menu mode="horizontal" className="menu">
+          <Menu.Item key="wellness">
+            <Link to="/category/general-wellness">
+              <span className="menu-text">General Wellness</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="body">
-            <Link to="/category/body-spray">Body Spray</Link>
+          <Menu.Item key="liver-kidney">
+            <Link to="/category/liver-kidney">
+              <span className="menu-text">Liver & Kidney Care</span>
+            </Link>
           </Menu.Item>
-          <Menu.Item key="bakhoor">
-            <Link to="/category/bakhoor">Bakhoor</Link>
+          <Menu.Item key="immunity">
+            <Link to="/category/immunity-respiratory">
+              <span className="menu-text">Immunity & Respiratory</span>
+            </Link>
           </Menu.Item>
-          <Menu.Item key="incense">
-            <Link to="/category/incense-sticks">Incense Sticks</Link>
+          <Menu.Item key="digestive">
+            <Link to="/category/digestive-health">
+              <span className="menu-text">Digestive Health</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="eye">
+            <Link to="/category/eye-care">
+              <span className="menu-text">Eye Care</span>
+            </Link>
           </Menu.Item>
           <Menu.Item key="new">
-            <Link to="/category/new-arrival">New Arrival</Link>
-          </Menu.Item>
-          <Menu.Item key="diffuser">
-            <Link to="/category/diffuser-oil">Diffuser Oil</Link>
+            <Link to="/category/new-arrival">
+              <span className="menu-text">New Arrivals</span>
+            </Link>
           </Menu.Item>
         </Menu>
 
         <Space size="large">
-        <CartDrawer />
-          <SearchOutlined style={{ fontSize: "24px", color: "#000" }} />
+          <CartDrawer />
+          <SearchOutlined className="icon" />
           <div style={{ position: "relative" }} ref={menuRef}>
-      {/* User Icon */}
-      <UserOutlined 
-        style={{ fontSize: "24px", color: "#000", cursor: "pointer" }} 
-        onClick={isAuthenticated ? () => setOpen(!open) : () => navigate("/auth")} 
-      />
-
-      {/* Dropdown Menu */}
-      {open && isAuthenticated && (
-        <div 
-          style={{
-            position: "absolute",
-            top: "40px",
-            right: "0",
-            background: "#fff",
-            boxShadow: "0px 4px 10px rgba(0,0,0,0.15)",
-            borderRadius: "8px",
-            padding: "2px 0",
-            minWidth: "120px",
-            zIndex: 1000
-          }}
-        >
-          <p style={menuItemStyle} onClick={() => navigate("/profile")}>Profile</p>
-          <p style={menuItemStyle} onClick={() => navigate("/settings")}>Settings</p>
-          <p style={{ ...menuItemStyle, color: "red" }} onClick={() => alert("Logging out...")}>Logout</p>
-        </div>
-      )}
-    </div>
-          <button 
-        onClick={handleLogout} 
-        style={{ border: "none", background: "none", cursor: "pointer" }}
-      >
-        {isAuthenticated && <LogoutOutlined style={{ fontSize: "24px", color: "#000" }} />}
-      </button>
+            <UserOutlined
+              className="icon"
+              onClick={isAuthenticated ? () => setOpen(!open) : () => navigate("/auth")}
+            />
+            {open && isAuthenticated && (
+              <div className="dropdown-menu">
+                <p onClick={() => navigate("/profile")}>Profile</p>
+                <p onClick={() => navigate("/settings")}>Settings</p>
+                <p className="logout-text" onClick={() => alert("Logging out...")}>
+                  Logout
+                </p>
+              </div>
+            )}
+          </div>
+          {isAuthenticated && <LogoutOutlined className="icon" onClick={handleLogout} />}
         </Space>
       </Header>
 
-      {/* Secondary Navigation */}
-      <div
-        style={{
-          background: "#f9f9f0",
-          padding: "10px 0",
-          textAlign: "center",
-          borderBottom: "1px solid #f0f0f0",
-        }}
-      >
+      <div className="secondary-nav">
         <Space size="large">
           <Link to="/track-order">Track Order</Link>
           <Link to="/return-order">Return Your Order</Link>
           <Link to="/store-locator">Store Locator</Link>
         </Space>
       </div>
-      window.removeEventListener("storage", updateCartCount);
     </>
-  )
-}
+  );
+};
 
-export default AppHeader
-
+export default AppHeader;

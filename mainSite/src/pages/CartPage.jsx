@@ -26,9 +26,13 @@ const CartPage = () => {
 
   // Update quantity
   const updateQuantity = (id, quantity) => {
-    setCartItems(
-      cartItems.map((item) => (item.id === id ? { ...item, quantity } : item))
+    if (quantity < 1) return;
+    const updatedCart = cartItems.map((item) =>
+      item.id === id ? { ...item, quantity } : item
     );
+    setCartItems(updatedCart);
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("storage"));
   };
 
   // Remove item
@@ -39,7 +43,7 @@ const CartPage = () => {
     window.dispatchEvent(new Event("storage"));
     message.success("Item removed from cart");
   };
-  
+
   // Calculate totals
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const shipping = cartItems.length > 0 ? 99 : 0;

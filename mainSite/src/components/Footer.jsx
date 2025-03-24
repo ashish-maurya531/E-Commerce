@@ -85,11 +85,11 @@ function Footer() {
       <div style={styles.container}>
         {/* Left Section */}
         <div style={styles.section}>
-          <h2 style={styles.title}>ORGANICSTORE®</h2>
+          <h2 style={styles.title}>UNIQUE HERBAL INDUSTRY®</h2>
           <div style={styles.contact}>
             📞 +91 8885978692  
             <br />
-            ✉️ info@organicstore.com
+            ✉️ info@uhistore.com
           </div>
           <div style={styles.social}>
             <a href="#" style={styles.link} onMouseOver={(e) => e.target.style.color = styles.linkHover.color} onMouseOut={(e) => e.target.style.color = styles.link.color}>
@@ -109,9 +109,9 @@ function Footer() {
           <h3 style={styles.title}>CATEGORIES</h3>
           <ul style={styles.list}>
             {[
-              'Buy 3 Attars at ₹899', 'Attar', 'Perfume Spray', 
-              'Royal Attar Perfume', 'Body Spray', 'Bakhoor', 
-              'Incense Sticks', 'New Arrival', 'Diffuser Oil', 
+              'General Health & Wellness', 'Mens Health', 'Womens Health', 
+              'Eye & Vision Care', 'Skin & Hair Care',
+              'Digestive Health', 'New Arrival', 'Joint & Bone', 
               'Track Order', 'Return Your Order', 'Store Locator'
             ].map((item) => (
               <li key={item}>
@@ -161,7 +161,7 @@ function Footer() {
       {/* Bottom Section */}
       <div style={styles.bottom}>
         <div>India (INR ₹)</div>
-        <div>© 2025 Organic Store | All Rights Reserved</div>
+        <div>© 2025 Unique Herbal Industry | All Rights Reserved</div>
         <div style={styles.developer}>Developed by Lexcorp Softwares</div>
       </div>
     </footer>

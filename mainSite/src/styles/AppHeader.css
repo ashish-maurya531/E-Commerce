@@ -1,0 +1,64 @@
+.app-header {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    background: #fff;
+    padding: 15px 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .logo-img {
+    height: 40px;
+    margin-top: 20px;
+    margin-right: auto;
+  }
+  .menu {
+    border: none;
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .menu-text {
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  /* Hide menu text when screen width is below 1200px */
+  @media (max-width: 1200px) {
+    .menu-text {
+      display: none;
+    }
+  }
+  
+  /* Icon styles */
+  .icon {
+    font-size: 24px;
+    color: #000;
+    cursor: pointer;
+  }
+  
+  /* Dropdown menu styles */
+  .dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 2px 0;
+    min-width: 120px;
+    z-index: 1000;
+  }
+  
+  .logout-text {
+    color: red;
+  }
+  
+  .secondary-nav {
+    background: #f9f9f0;
+    padding: 10px 0;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+  }  

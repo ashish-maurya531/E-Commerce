@@ -1,4 +1,4 @@
-import { FaLeaf, FaSeedling, FaHandsHelping, FaRecycle, FaGlobe, FaWater } from 'react-icons/fa';
+import { FaCapsules, FaHeartbeat, FaFlask, FaLeaf, FaHandHoldingHeart, FaShieldAlt } from "react-icons/fa";
 
 const styles = {
   organicQualities: {
@@ -42,17 +42,17 @@ const styles = {
 
 function WhyUs() {
   const qualities = [
-    { icon: <FaLeaf />, text: '100% Organic' },
-    { icon: <FaSeedling />, text: 'Non-GMO' },
-    { icon: <FaHandsHelping />, text: 'Ethically Sourced' },
-    { icon: <FaRecycle />, text: 'Eco-Friendly Packaging' },
-    { icon: <FaGlobe />, text: 'Sustainable Farming' },
-    { icon: <FaWater />, text: 'No Artificial Chemicals' }
-  ];
+    { icon: <FaLeaf />, text: "100% Herbal & Natural" },
+    { icon: <FaCapsules />, text: "Scientifically Formulated" },
+    { icon: <FaShieldAlt />, text: "Boosts Immunity & Overall Health" },
+    { icon: <FaFlask />, text: "No Harmful Chemicals" },
+    { icon: <FaHeartbeat />, text: "Supports Holistic Wellness" },
+    { icon: <FaHandHoldingHeart />, text: "Trusted & Safe for Daily Use" }
+];
 
   return (
     <div style={styles.organicQualities}>
-      <h2 style={styles.qualitiesTitle}>Why Choose Organic?</h2>
+      <h2 style={styles.qualitiesTitle}>Why Choose Herbal?</h2>
       <div style={styles.qualitiesList}>
         {qualities.map((item, index) => (
           <div

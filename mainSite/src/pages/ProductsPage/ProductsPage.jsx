@@ -1,5 +1,5 @@
 "use client"
-
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react"
 import ProductCard from "./ProductCard"
 import FilterSidebar from "./FilterSidebar"
@@ -15,108 +15,189 @@ function ProductsPage() {
   const [sortBy, setSortBy] = useState("featured")
   const [showFilters, setShowFilters] = useState(false)
   const [categoryFilter, setCategoryFilter] = useState("all")
-
+  const { categoryName } = useParams();
+  const placeholderImage = "https://picsum.photos/300/300";
+  const featuredProducts = [
+    {
+      id: 1,
+      name: "Super Health",
+      price: 499,
+      image: placeholderImage,
+      category: "General Health & Wellness",
+    },
+    {
+      id: 2,
+      name: "Liver Care",
+      price: 599,
+      image: placeholderImage,
+      category: "Liver & Kidney Health",
+    },
+    {
+      id: 3,
+      name: "Total Health",
+      price: 699,
+      image: placeholderImage,
+      category: "General Health & Wellness",
+    },
+    {
+      id: 4,
+      name: "Acai Berry",
+      price: 799,
+      image: placeholderImage,
+      category: "Immunity & Respiratory Health",
+    },
+    {
+      id: 5,
+      name: "Cough Syrup",
+      price: 299,
+      image: placeholderImage,
+      category: "Immunity & Respiratory Health",
+    },
+    {
+      id: 6,
+      name: "Piles Care",
+      price: 549,
+      image: placeholderImage,
+      category: "Digestive & Gut Health",
+    },
+    {
+      id: 7,
+      name: "Ortho Care",
+      price: 699,
+      image: placeholderImage,
+      category: "Joint & Bone Health",
+    },
+    {
+      id: 8,
+      name: "Bhringraj Hair Oil",
+      price: 399,
+      image: placeholderImage,
+      category: "Skin & Hair Care",
+    },
+    {
+      id: 9,
+      name: "Aloe Vera Shampoo",
+      price: 499,
+      image: placeholderImage,
+      category: "Skin & Hair Care",
+    },
+    {
+      id: 10,
+      name: "Aloe Vera Face Wash",
+      price: 349,
+      image: placeholderImage,
+      category: "Skin & Hair Care",
+    },
+    {
+      id: 11,
+      name: "Kidney Care",
+      price: 599,
+      image: placeholderImage,
+      category: "Liver & Kidney Health",
+    },
+    {
+      id: 12,
+      name: "Lady Care",
+      price: 649,
+      image: placeholderImage,
+      category: "Women's Health",
+    },
+    {
+      id: 13,
+      name: "Blood Purifier",
+      price: 499,
+      image: placeholderImage,
+      category: "Skin & Hair Care",
+    },
+    {
+      id: 14,
+      name: "Cyst Care",
+      price: 749,
+      image: placeholderImage,
+      category: "Women's Health",
+    },
+    {
+      id: 15,
+      name: "Digestive Care Tablets",
+      price: 399,
+      image: placeholderImage,
+      category: "Digestive & Gut Health",
+    },
+    {
+      id: 16,
+      name: "Charam Rog Nashak Malham",
+      price: 599,
+      image: placeholderImage,
+      category: "Skin & Hair Care",
+    },
+    {
+      id: 17,
+      name: "Stamina",
+      price: 799,
+      image: placeholderImage,
+      category: "Men's Health",
+    },
+    {
+      id: 18,
+      name: "Eye Drop",
+      price: 299,
+      image: placeholderImage,
+      category: "Eye & Vision Care",
+    },
+    {
+      id: 19,
+      name: "Sugar Control",
+      price: 649,
+      image: placeholderImage,
+      category: "General Health & Wellness",
+    },
+    {
+      id: 20,
+      name: "Man Care",
+      price: 749,
+      image: placeholderImage,
+      category: "Men's Health",
+    },
+    {
+      id: 21,
+      name: "Young Tarang",
+      price: 849,
+      image: placeholderImage,
+      category: "Men's Health",
+    },
+    {
+      id: 22,
+      name: "Digestive Care Powder",
+      price: 449,
+      image: placeholderImage,
+      category: "Digestive & Gut Health",
+    }
+];
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   // Fetch products (simulated)
   useEffect(() => {
+    const filteredProducts = featuredProducts.filter(
+      (product) =>
+        product.category.toLowerCase() === categoryName.toLowerCase()
+    );
     // In a real app, you would fetch from an API
     const fetchProducts = async () => {
       setLoading(true)
       try {
-        // Simulated data - replace with actual API call
-        const data = [
-          {
-            id: 1,
-            name: "Perfume Discovery Set - Pack of 10 (5ml Each)",
-            price: 999,
-            originalPrice: 1999,
-            discount: "50% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.7,
-            reviews: 129,
-            category: "discovery-set",
-            isNew: true,
-          },
-          {
-            id: 2,
-            name: "Legendary Gift Set 3 Pcs Set of Premium Perfume Spray",
-            price: 999,
-            originalPrice: 1499,
-            discount: "33% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.8,
-            reviews: 142,
-            category: "gift-set",
-          },
-          {
-            id: 3,
-            name: "The Story 20 ML",
-            price: 399,
-            originalPrice: 599,
-            discount: "33% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.8,
-            reviews: 119,
-            category: "perfume-spray",
-          },
-          {
-            id: 4,
-            name: "The Story 50 ML",
-            price: 799,
-            originalPrice: 1199,
-            discount: "33% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.8,
-            reviews: 119,
-            category: "perfume-spray",
-          },
-          {
-            id: 5,
-            name: "AQ 365 Perfume Spray 20 ML",
-            price: 399,
-            originalPrice: 599,
-            discount: "33% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.7,
-            reviews: 1026,
-            category: "perfume-spray",
-          },
-          {
-            id: 6,
-            name: "AQ 365 Perfume Spray 50 ML",
-            price: 799,
-            originalPrice: 1199,
-            discount: "33% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.7,
-            reviews: 1026,
-            category: "perfume-spray",
-          },
-          {
-            id: 7,
-            name: "Royal Attar Perfume 20 ML",
-            price: 499,
-            originalPrice: 699,
-            discount: "29% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.9,
-            reviews: 215,
-            category: "attar",
-          },
-          {
-            id: 8,
-            name: "Premium Body Spray 150 ML",
-            price: 599,
-            originalPrice: 899,
-            discount: "33% off",
-            image: "https://via.placeholder.com/300",
-            rating: 4.6,
-            reviews: 87,
-            category: "body-spray",
-          },
-        ]
+        const data = filteredProducts.map((product, index) => ({
+          id: index + 1,
+          name: product.name,
+          price: product.price,
+          originalPrice: Math.round(product.price * 1.5), // Assuming a 50% markup for original price
+          discount: `${Math.round((1 - product.price / (product.price * 1.5)) * 100)}% off`,
+          image: product.image,
+          rating: (Math.random() * 1.5 + 4).toFixed(1), // Generating random ratings between 4.0 and 5.5
+          reviews: Math.floor(Math.random() * 200) + 50, // Generating random reviews between 50 and 250
+          category: product.category.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-"),
+          isNew: Math.random() > 0.5, // Randomly marking some products as new
+        }));
         setProducts(data)
         setFilteredProducts(data)
       } catch (error) {
@@ -125,7 +206,6 @@ function ProductsPage() {
         setLoading(false)
       }
     }
-
     fetchProducts()
   }, [])
 
@@ -194,7 +274,7 @@ function ProductsPage() {
       <Header />
       {/* Page Header */}
       <div className="page-header">
-        <h1>Premium Perfume Spray (EDP)</h1>
+        <h1>{categoryName ? categoryName.replace("-", " ") : "All Products"}</h1>
       </div>
 
       {/* Main Content */}

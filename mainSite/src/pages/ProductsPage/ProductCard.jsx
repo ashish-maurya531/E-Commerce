@@ -2,12 +2,14 @@
 
 import { useState } from "react"
 import "../../styles/ProductCard.css"
+import { useCart } from "../../CartContext.jsx";
 
 function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false)
-
+  const { addToCart } = useCart();
   return (
-    <div className="product-card" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+    <div className="product-card" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}
+    onClick={() => window.location.href = `/product/${product.id}`}>
       {/* Product Image */}
       <div className="product-image-container">
         <img
@@ -42,7 +44,12 @@ function ProductCard({ product }) {
         </div>
 
         {/* Add to Cart Button */}
-        <button className="add-to-cart-button">ADD TO CART</button>
+        <button className="add-to-cart-button"
+        onClick={(e) => {
+          e.stopPropagation();
+          addToCart(product);
+        }}
+        >ADD TO CART</button>
       </div>
     </div>
   )
