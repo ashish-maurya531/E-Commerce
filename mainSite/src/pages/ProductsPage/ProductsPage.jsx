@@ -16,6 +16,9 @@ function ProductsPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [categoryFilter, setCategoryFilter] = useState("all")
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Fetch products (simulated)
   useEffect(() => {
     // In a real app, you would fetch from an API

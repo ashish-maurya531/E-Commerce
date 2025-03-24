@@ -1,5 +1,5 @@
 import { Layout, Typography, Steps, Form, Input, Button, Row, Col, Card, Divider, Radio, Space, List } from "antd"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
@@ -17,7 +17,9 @@ const CheckoutPage = () => {
   const prev = () => {
     setCurrent(current - 1)
   }
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Sample cart items
   const cartItems = [
     {

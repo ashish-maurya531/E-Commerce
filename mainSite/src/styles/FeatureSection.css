@@ -1,0 +1,48 @@
+.feature-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+    background-color: #faf7f2;
+  }
+  
+  .feature-item {
+    display: flex;
+    flex-direction: column;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .feature-icon i {
+    font-size: 28px;
+    color: #4a1c1c;
+  }
+  
+  .feature-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+  }
+  
+  @media (max-width: 768px) {
+    .feature-section {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }

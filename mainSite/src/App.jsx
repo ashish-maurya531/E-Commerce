@@ -9,7 +9,8 @@ import StoreLocatorPage from "./pages/StoreLocatorPage";
 import ProductsPage from "./pages/ProductsPage/ProductsPage";
 import AuthPage from "./pages/AuthPage";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-
+import ProductDetailPage from "./pages/ProductDetailPage";
+import { CartProvider } from "./CartContext.jsx";
 // Custom theme configuration for Ant Design
 const theme = {
   token: {
@@ -26,10 +27,11 @@ const theme = {
 function App() {
   return (
     <ConfigProvider theme={theme}>
+      <CartProvider>
       <Router>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<AuthPage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/store-locator" element={<ProductsPage />} />
           <Route path="/buy-3-attars" element={<ProductsPage />} />
@@ -42,6 +44,7 @@ function App() {
           <Route path="/new-arrival" element={<ProductsPage />} />
           <Route path="/diffuser-oil" element={<ProductsPage />} />
           <Route path="/store-locator" element={<StoreLocatorPage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
           {/* Protected Routes */}
           <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
@@ -53,6 +56,7 @@ function App() {
           <Route path="*" element={<h1 style={{ textAlign: "center", marginTop: "100px" }}>404 Not Found</h1>} />
         </Routes>
       </Router>
+      </CartProvider>
     </ConfigProvider>
   );
 }

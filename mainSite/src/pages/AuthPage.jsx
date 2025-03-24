@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/auth-styles.css";
 import { Link,useNavigate } from "react-router-dom";
 
@@ -16,6 +16,10 @@ export default function AuthPage() {
   });
   const [errors, setErrors] = useState({});
   const [tempFormData, setTempFormData] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -2,23 +2,40 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { Layout, Menu, Badge, Input, Typography, Space } from "antd"
 import { ShoppingCartOutlined, UserOutlined, SearchOutlined,LogoutOutlined } from "@ant-design/icons"
+import CartDrawer from "./CartDrawer";
 
 const { Header } = Layout
 const { Search } = Input
 const { Text } = Typography
 const menuItemStyle = {
-  padding: "0px 15px",
-  margin: "0",
+  padding: "0px -30px",
+  margin: "0px 15px",
   cursor: "pointer",
-  fontSize: "14px",
+  fontSize: "12px",
   transition: "background 0.2s",
 };
 const AppHeader = () => {
-  const isAuthenticated = !!localStorage.getItem("authToken"); // Check if user is logged in
+  const isAuthenticated = !! localStorage.getItem("authToken"); // Check if user is logged in
   const [showDropdown, setShowDropdown] = useState(false);
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
   const navigate = useNavigate();
+
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+      setCartCount(totalQuantity);
+    };
+
+    updateCartCount();
+
+    // Listen for cart updates from other components
+    window.addEventListener("storage", updateCartCount);
+  });
+
   const handleLogout = () => {
     localStorage.removeItem("authToken"); // Remove authentication token
     navigate("/auth"); // Redirect to login page
@@ -116,28 +133,24 @@ const AppHeader = () => {
         </Menu>
 
         <Space size="large">
-          <Link to="/cart">
-            <Badge count={0}>
-              <ShoppingCartOutlined style={{ fontSize: "24px", color: "#000" }} />
-            </Badge>
-          </Link>
+        <CartDrawer />
           <SearchOutlined style={{ fontSize: "24px", color: "#000" }} />
           <div style={{ position: "relative" }} ref={menuRef}>
       {/* User Icon */}
       <UserOutlined 
         style={{ fontSize: "24px", color: "#000", cursor: "pointer" }} 
-        onClick={() => setOpen(!open)} 
+        onClick={isAuthenticated ? () => setOpen(!open) : () => navigate("/auth")} 
       />
 
       {/* Dropdown Menu */}
-      {open && (
+      {open && isAuthenticated && (
         <div 
           style={{
             position: "absolute",
             top: "40px",
             right: "0",
             background: "#fff",
-            boxShadow: "0px 4px 10px rgba(0,0,0,0.15)",  // ✨ Improved Shadow
+            boxShadow: "0px 4px 10px rgba(0,0,0,0.15)",
             borderRadius: "8px",
             padding: "2px 0",
             minWidth: "120px",
@@ -154,7 +167,7 @@ const AppHeader = () => {
         onClick={handleLogout} 
         style={{ border: "none", background: "none", cursor: "pointer" }}
       >
-        <LogoutOutlined style={{ fontSize: "24px", color: "#000" }} />
+        {isAuthenticated && <LogoutOutlined style={{ fontSize: "24px", color: "#000" }} />}
       </button>
         </Space>
       </Header>
@@ -174,6 +187,7 @@ const AppHeader = () => {
           <Link to="/store-locator">Store Locator</Link>
         </Space>
       </div>
+      window.removeEventListener("storage", updateCartCount);
     </>
   )
 }

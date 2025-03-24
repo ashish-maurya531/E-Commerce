@@ -1,6 +1,6 @@
 import { Layout, Typography, Input, Button, Card, Row, Col, Divider, Tag } from "antd"
 import { SearchOutlined, EnvironmentOutlined, PhoneOutlined, ClockCircleOutlined } from "@ant-design/icons"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
@@ -9,7 +9,9 @@ const { Title, Text, Paragraph } = Typography
 
 const StoreLocatorPage = () => {
   const [searchQuery, setSearchQuery] = useState("")
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Sample store data
   const stores = [
     {

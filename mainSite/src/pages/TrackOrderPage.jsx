@@ -1,6 +1,6 @@
 import { Layout, Typography, Input, Button, Steps, Card, Divider, List, Space } from "antd"
 import { SearchOutlined } from "@ant-design/icons"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
@@ -11,7 +11,9 @@ const { Step } = Steps
 const TrackOrderPage = () => {
   const [orderNumber, setOrderNumber] = useState("")
   const [orderFound, setOrderFound] = useState(false)
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Sample order data
   const orderDetails = {
     id: "ORD-12345",

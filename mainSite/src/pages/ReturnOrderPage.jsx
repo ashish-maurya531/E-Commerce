@@ -1,6 +1,6 @@
 import { Layout, Typography, Form, Input, Button, Select, Upload, Card, Steps, message } from "antd"
 import { UploadOutlined } from "@ant-design/icons"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
@@ -13,7 +13,9 @@ const { TextArea } = Input
 const ReturnOrderPage = () => {
   const [current, setCurrent] = useState(0)
   const [form] = Form.useForm()
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const next = () => {
     form
       .validateFields()

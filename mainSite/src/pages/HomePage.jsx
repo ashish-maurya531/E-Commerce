@@ -1,13 +1,25 @@
 import { Layout, Carousel, Card, Row, Col, Typography, Button, Rate } from "antd"
+import { useState, useEffect } from "react"
+import { Link,useNavigate } from "react-router-dom";
 import { ShoppingOutlined } from "@ant-design/icons"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
+import Featuresection from "../components/Featuresection"
 import WhyUs from "../components/WhyUs"
+import { useCart } from "../CartContext.jsx";
 const { Content } = Layout
 const { Title, Text } = Typography
 const { Meta } = Card
 
 const HomePage = () => {
+
+  const { addToCart } = useCart();
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const categories = [
     {
       title: "Attar",
@@ -96,7 +108,6 @@ const HomePage = () => {
   return (
     <Layout style={{ minHeight: "100vh", background: "#f9f9f0" }}>
       <Header />
-
       <Content>
       <Carousel autoplay autoplaySpeed={3000} pauseOnHover={false} effect="fade">
     <div>
@@ -307,7 +318,7 @@ const HomePage = () => {
       </div>
     </div>
   </Carousel>
-
+        <Featuresection/>
         {/* Featured Categories */}
         <div style={{ padding: "60px 50px", background: "#fff" }}>
       <Title level={2} style={{ textAlign: "center", marginBottom: "40px" }}>
@@ -339,10 +350,11 @@ const HomePage = () => {
             {featuredProducts.map((product) => (
               <Col xs={24} sm={12} md={8} lg={6} key={product.id}>
                 <Card
+                // onClick={() => navigate("/product/"+product.id)}
                   hoverable
                   cover={<img alt={product.name} src={product.image || "/placeholder.svg"} />}
                   actions={[
-                    <Button type="primary" icon={<ShoppingOutlined />} key="add-to-cart">
+                    <Button type="primary" icon={<ShoppingOutlined />} key="add-to-cart" onClick={() => addToCart(product)}>
                       Add to Cart
                     </Button>,
                   ]}
