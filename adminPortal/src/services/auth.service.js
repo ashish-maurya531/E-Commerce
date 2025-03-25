@@ -8,21 +8,21 @@ const register = async (userData) => {
 
 // Login user
 const login = async (email, password) => {
-  const response = await api.post("/auth/login", { email, password })
-
-  if (response.data.accessToken) {
-    localStorage.setItem("accessToken", response.data.accessToken)
-    localStorage.setItem("refreshToken", response.data.refreshToken)
-    localStorage.setItem("user", JSON.stringify(response.data.user))
+  try {
+    const response = await api.post("/auth/login", { email, password })
+    if (response.data.accessToken) {
+      localStorage.setItem("accessToken", response.data.accessToken)
+      localStorage.setItem("refreshToken", response.data.refreshToken)
+      localStorage.setItem("user", JSON.stringify(response.data.user))
+    } 
+    return response.data
+  } catch (error) {
+    throw error
   }
-
-  return response.data
 }
 
-// Logout user
 const logout = async () => {
   const refreshToken = localStorage.getItem("refreshToken")
-
   if (refreshToken) {
     try {
       await api.post("/auth/logout", { refreshToken })
@@ -30,10 +30,24 @@ const logout = async () => {
       console.error("Logout error:", error)
     }
   }
+  localStorage.clear()
+}
 
-  localStorage.removeItem("accessToken")
-  localStorage.removeItem("refreshToken")
-  localStorage.removeItem("user")
+// Add a new method to check refresh token validity
+const checkRefreshToken = async () => {
+  const refreshToken = localStorage.getItem("refreshToken")
+  if (!refreshToken) return false
+
+  try {
+    const response = await api.post("/auth/refresh-token", { refreshToken })
+    if (response.data.accessToken) {
+      localStorage.setItem("accessToken", response.data.accessToken)
+      return true
+    }
+    return false
+  } catch (error) {
+    return false
+  }
 }
 
 // Get current user
@@ -57,7 +71,12 @@ const authService = {
   logout,
   getCurrentUser,
   getProfile,
+  checkRefreshToken,
 }
 
 export default authService
+
+
+
+
 

@@ -17,6 +17,8 @@ import {
   MenuUnfoldOutlined,
   InboxOutlined,
 } from "@ant-design/icons"
+import logo from "../../assets/logo.png" // Add this import
+import authService from "../../services/auth.service"
 
 const { Header, Sider, Content } = Layout
 const { Title, Text } = Typography
@@ -25,6 +27,70 @@ const AdminLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+
+  const handleMenuClick = (path) => {
+    navigate(path)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout()
+      navigate("/admin/login", { state: { fromLogout: true }, replace: true })
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
+  }
+
+  const menuItems = [
+    {
+      key: "dashboard",
+      icon: <DashboardOutlined />,
+      label: "Dashboard",
+      onClick: () => handleMenuClick("/admin/dashboard"),
+    },
+    {
+      key: "products",
+      icon: <ShoppingOutlined />,
+      label: "Products",
+      onClick: () => handleMenuClick("/admin/products"),
+    },
+    {
+      key: "orders",
+      icon: <ShoppingCartOutlined />,
+      label: "Orders",
+      onClick: () => handleMenuClick("/admin/orders"),
+    },
+    {
+      key: "inventory",
+      icon: <InboxOutlined />,
+      label: "Inventory",
+      onClick: () => handleMenuClick("/admin/inventory"),
+    },
+    {
+      key: "users",
+      icon: <UserOutlined />,
+      label: "Users",
+      onClick: () => handleMenuClick("/admin/users"),
+    },
+    {
+      key: "categories",
+      icon: <AppstoreOutlined />,
+      label: "Categories",
+      onClick: () => handleMenuClick("/admin/categories"),
+    },
+    {
+      key: "reports",
+      icon: <BarChartOutlined />,
+      label: "Reports",
+      onClick: () => handleMenuClick("/admin/reports"),
+    },
+    {
+      key: "settings",
+      icon: <SettingOutlined />,
+      label: "Settings",
+      onClick: () => handleMenuClick("/admin/settings"),
+    },
+  ]
 
   // Get current page title based on path
   const getPageTitle = () => {
@@ -68,18 +134,19 @@ const AdminLayout = ({ children }) => {
   // User dropdown menu
   const userMenu = (
     <Menu>
-      <Menu.Item key="profile" icon={<UserOutlined />}>
+      <Menu.Item key="profile" icon={<UserOutlined />} onClick={() => handleMenuClick("/admin/settings")}>
         Profile
       </Menu.Item>
-      <Menu.Item key="settings" icon={<SettingOutlined />}>
+      <Menu.Item key="settings" icon={<SettingOutlined />} onClick={() => handleMenuClick("/admin/settings")}>
         Settings
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={() => navigate("/admin")}>
+      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>
-  )
+  );
+  
 
   // Notifications dropdown menu
   const notificationsMenu = (
@@ -113,106 +180,19 @@ const AdminLayout = ({ children }) => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        style={{
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          background: "#001529",
-        }}
-      >
-        <div
-          style={{
-            height: "64px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: collapsed ? "center" : "flex-start",
-            padding: collapsed ? "0" : "0 16px",
-            color: "#fff",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
-          <div
-          style={{
-            fontSize: "24px",
-            fontWeight: "bold",
-            display: "flex",
-            alignItems: "center",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            width: collapsed ? "40px" : "120px", // Adjust width smoothly
-            transition: "width 0.3s ease, opacity 0.3s ease",
-            opacity: collapsed ? 1 : 1, // Avoid sudden flickering
-          }}
-        >
-          💊
-          <span style={{ 
-            marginLeft: collapsed ? "0px" : "8px",
-            opacity: collapsed ? 0 : 1,
-            transition: "opacity 0.3s ease, margin-left 0.3s ease"
-          }}>
-            Medic
-          </span>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="logo" style={{ padding: 16, textAlign: "center" }}>
+          <img src={logo} alt="Logo" style={{ height: 32 }} />
         </div>
-
-        </div>
-
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={[location.pathname.split("/").pop() || "dashboard"]}
-          items={[
-            {
-              key: "dashboard",
-              icon: <DashboardOutlined />,
-              label: <Link to="/admin/dashboard">Dashboard</Link>,
-            },
-            {
-              key: "categories",
-              icon: <AppstoreOutlined />,
-              label: <Link to="/admin/categories">Categories</Link>,
-            },
-            {
-              key: "products",
-              icon: <ShoppingOutlined />,
-              label: <Link to="/admin/products">Products</Link>,
-            },
-            {
-              key: "inventory",
-              icon: <InboxOutlined />,
-              label: <Link to="/admin/inventory">Inventory</Link>,
-            },
-            {
-              key: "users",
-              icon: <UserOutlined />,
-              label: <Link to="/admin/users">Users</Link>,
-            },
-            {
-              key: "orders",
-              icon: <ShoppingCartOutlined />,
-              label: <Link to="/admin/orders">Orders</Link>,
-            },
-            {
-              key: "reports",
-              icon: <BarChartOutlined />,
-              label: <Link to="/admin/reports">Reports</Link>,
-            },
-            {
-              key: "settings",
-              icon: <SettingOutlined />,
-              label: <Link to="/admin/settings">Settings</Link>,
-            },
-          ]}
+          selectedKeys={[location.pathname.split("/").pop()]}
+          items={menuItems}
         />
       </Sider>
-
-      <Layout style={{ marginLeft: collapsed ? 80 : 200, transition: "all 0.2s" }}>
+      
+      <Layout style={{ marginLeft: collapsed ? 0 :0, transition: "all 0.2s" }}>
         <Header
           style={{
             padding: "0 16px",
@@ -252,13 +232,13 @@ const AdminLayout = ({ children }) => {
         </Header>
 
         <Content style={{ margin: "16px", padding: "16px", background: "#fff", minHeight: 280 }}>
-          <Breadcrumb style={{ marginBottom: "16px" }}>
+          {/* <Breadcrumb style={{ marginBottom: "16px" }}>
             {breadcrumbItems.map((item, index) => (
               <Breadcrumb.Item key={index}>
                 {index === breadcrumbItems.length - 1 ? item.title : <Link to={item.href}>{item.title}</Link>}
               </Breadcrumb.Item>
             ))}
-          </Breadcrumb>
+          </Breadcrumb> */}
 
           {children}
         </Content>

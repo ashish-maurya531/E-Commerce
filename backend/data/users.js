@@ -42,7 +42,7 @@ const users = [
     id: 4,
     firstName: "Customer",
     lastName: "User",
-    email: "customer@example.com",
+    email: "@ecustomerxample.com",
     password: bcrypt.hashSync("customer123", 10),
     role: "customer",
     phone: "+91 9876543213",

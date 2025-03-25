@@ -7,7 +7,7 @@ const { verifyToken } = require("../middleware/auth.middleware")
 router.post("/register", authController.register)
 
 // Login user
-router.post("/login", authController.login)
+router.post("/login", authController.login) 
 
 // Refresh token
 router.post("/refresh-token", authController.refreshToken)

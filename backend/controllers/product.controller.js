@@ -13,7 +13,7 @@ const getAllProducts = (req, res) => {
       if (category) {
         filteredProducts = filteredProducts.filter((product) => product.category_id === category.id)
       }
-    }
+    } 
 
     // Filter by status
     if (req.query.status) {
