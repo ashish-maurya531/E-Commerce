@@ -3,6 +3,7 @@ const cors = require("cors")
 const morgan = require("morgan")
 const dotenv = require("dotenv")
 const path = require("path")
+const moment = require('moment-timezone');
 
 // Load environment variables
 dotenv.config()
@@ -23,14 +24,18 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(morgan("dev"))
+// app.use(morgan("dev"))
+morgan.token('date', () => {
+  return moment().tz("Asia/Kolkata").format('YYYY-MM-DD HH:mm:ss');
+});
+app.use(morgan('[:date[iso]] :method :url :status - :response-time ms'));
 
 // Static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
 // Routes
 app.use("/api/auth", authRoutes)
-app.use("/api/products", productRoutes)
+app.use("/api/products", productRoutes) 
 app.use("/api/orders", orderRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/categories", categoryRoutes)

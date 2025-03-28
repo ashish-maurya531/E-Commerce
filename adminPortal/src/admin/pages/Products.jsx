@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Table, Button, Space, Input, Tag, Modal, Form, Select, InputNumber, Upload, DatePicker, message } from "antd"
 import {
   PlusOutlined,
@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons"
 import AdminLayout from "../components/AdminLayout"
 import moment from "moment"
+import productService from "../../services/product.service"
 
 const { Option } = Select
 
@@ -20,90 +21,172 @@ const Products = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [form] = Form.useForm()
   const [editingProduct, setEditingProduct] = useState(null)
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  // Sample product data
-  const products = [
-    {
-      id: 1,
-      name: "Royal Attar Perfume",
-      category: "Royal Attar",
-      price: 899,
-      stock: 120,
-      manufacturer: "AdilQadri",
-      expiry: "2025-12-31",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Musk Attar",
-      category: "Attar",
-      price: 699,
-      stock: 85,
-      manufacturer: "AdilQadri",
-      expiry: "2025-10-15",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Rose Perfume Spray",
-      category: "Perfume Spray",
-      price: 799,
-      stock: 65,
-      manufacturer: "AdilQadri",
-      expiry: "2025-11-20",
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "Oud Bakhoor",
-      category: "Bakhoor",
-      price: 1299,
-      stock: 40,
-      manufacturer: "AdilQadri",
-      expiry: "2024-09-30",
-      status: "Active",
-    },
-    {
-      id: 5,
-      name: "Premium Diffuser Oil",
-      category: "Diffuser Oil",
-      price: 999,
-      stock: 55,
-      manufacturer: "AdilQadri",
-      expiry: "2025-08-15",
-      status: "Active",
-    },
-    {
-      id: 6,
-      name: "Luxury Body Spray",
-      category: "Body Spray",
-      price: 599,
-      stock: 0,
-      manufacturer: "AdilQadri",
-      expiry: "2025-07-10",
-      status: "Out of Stock",
-    },
-    {
-      id: 7,
-      name: "Sandalwood Incense Sticks",
-      category: "Incense Sticks",
-      price: 399,
-      stock: 150,
-      manufacturer: "AdilQadri",
-      expiry: "2026-01-20",
-      status: "Active",
-    },
-    {
-      id: 8,
-      name: "Special Edition Attar",
-      category: "Attar",
-      price: 1499,
-      stock: 25,
-      manufacturer: "AdilQadri",
-      expiry: "2024-12-15",
-      status: "Low Stock",
-    },
-  ]
+  // Fetch products on component mount
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  // Fetch products from API
+  const fetchProducts = async () => {
+    try {
+      setLoading(true)
+      const data = await productService.getAllProducts()
+      setProducts(data)
+    } catch (error) {
+      message.error("Failed to fetch products")
+      console.error("Error fetching products:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Handle add/edit product
+  const handleAddEdit = () => {
+    setEditingProduct(null)
+    form.resetFields()
+    setIsModalVisible(true)
+  }
+
+  // Handle edit product
+  const handleEdit = (product) => {
+    setEditingProduct(product)
+    form.setFieldsValue({
+      name: product.name,
+      category: product.category,
+      price: product.price,
+      stock: product.stock,
+      manufacturer: product.manufacturer,
+      expiry: product.expiry ? moment(product.expiry) : null,
+      status: product.status,
+    })
+    setIsModalVisible(true)
+  }
+
+  // Handle delete product
+  const handleDelete = (id) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this product?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: async () => {
+        try {
+          await productService.deleteProduct(id)
+          message.success("Product deleted successfully")
+          fetchProducts() // Refresh the product list
+        } catch (error) {
+          message.error("Failed to delete product")
+          console.error("Error deleting product:", error)
+        }
+      },
+    })
+  }
+
+  // Handle form submission
+  const handleSubmit = async (values) => {
+    try {
+      if (editingProduct) {
+        await productService.updateProduct(editingProduct.id, values)
+        message.success("Product updated successfully")
+      } else {
+        await productService.createProduct(values)
+        message.success("Product added successfully")
+      }
+      setIsModalVisible(false)
+      fetchProducts() // Refresh the product list
+    } catch (error) {
+      message.error(editingProduct ? "Failed to update product" : "Failed to add product")
+      console.error("Error saving product:", error)
+    }
+  }
+
+  // // Sample product data
+  // const products = [
+  //   {
+  //     id: 1,
+  //     name: "Royal Attar Perfume",
+  //     category: "Royal Attar",
+  //     price: 899,
+  //     stock: 120,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2025-12-31",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Musk Attar",
+  //     category: "Attar",
+  //     price: 699,
+  //     stock: 85,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2025-10-15",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Rose Perfume Spray",
+  //     category: "Perfume Spray",
+  //     price: 799,
+  //     stock: 65,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2025-11-20",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Oud Bakhoor",
+  //     category: "Bakhoor",
+  //     price: 1299,
+  //     stock: 40,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2024-09-30",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Premium Diffuser Oil",
+  //     category: "Diffuser Oil",
+  //     price: 999,
+  //     stock: 55,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2025-08-15",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Luxury Body Spray",
+  //     category: "Body Spray",
+  //     price: 599,
+  //     stock: 0,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2025-07-10",
+  //     status: "Out of Stock",
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Sandalwood Incense Sticks",
+  //     category: "Incense Sticks",
+  //     price: 399,
+  //     stock: 150,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2026-01-20",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Special Edition Attar",
+  //     category: "Attar",
+  //     price: 1499,
+  //     stock: 25,
+  //     manufacturer: "AdilQadri",
+  //     expiry: "2024-12-15",
+  //     status: "Low Stock",
+  //   },
+  // ]
 
   // Sample categories
   const categories = [
@@ -211,55 +294,18 @@ const Products = () => {
     },
   ]
 
-  // Handle add/edit product
-  const handleAddEdit = () => {
-    setEditingProduct(null)
-    form.resetFields()
-    setIsModalVisible(true)
-  }
-
-  // Handle edit product
-  const handleEdit = (product) => {
-    setEditingProduct(product)
-    form.setFieldsValue({
-      name: product.name,
-      category: product.category,
-      price: product.price,
-      stock: product.stock,
-      manufacturer: product.manufacturer,
-      expiry: product.expiry ? moment(product.expiry) : null,
-      status: product.status,
-    })
-    setIsModalVisible(true)
-  }
-
-  // Handle delete product
-  const handleDelete = (id) => {
-    Modal.confirm({
-      title: "Are you sure you want to delete this product?",
-      content: "This action cannot be undone.",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk() {
-        message.success("Product deleted successfully")
-      },
-    })
-  }
-
-  // Handle form submission
-  const handleSubmit = (values) => {
-    console.log("Form values:", values)
-
-    // Here you would typically make an API call to save the product
-    message.success(`Product ${editingProduct ? "updated" : "added"} successfully`)
-    setIsModalVisible(false)
-  }
-
   return (
     <AdminLayout>
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
-        <Input.Search placeholder="Search products" allowClear style={{ width: 300 }} prefix={<SearchOutlined />} />
+        <Input.Search 
+          placeholder="Search products" 
+          allowClear 
+          style={{ width: 300 }} 
+          prefix={<SearchOutlined />}
+          onSearch={(value) => {
+            fetchProducts({ search: value })
+          }}
+        />
         <Space>
           <Button icon={<ImportOutlined />}>Import</Button>
           <Button icon={<ExportOutlined />}>Export</Button>
@@ -269,7 +315,14 @@ const Products = () => {
         </Space>
       </div>
 
-      <Table columns={columns} dataSource={products} rowKey="id" pagination={{ pageSize: 10 }} scroll={{ x: 1200 }} />
+      <Table 
+        columns={columns} 
+        dataSource={products} 
+        rowKey="id" 
+        pagination={{ pageSize: 10 }} 
+        scroll={{ x: 1200 }}
+        loading={loading}
+      />
 
       {/* Add/Edit Product Modal */}
       <Modal
@@ -306,7 +359,7 @@ const Products = () => {
               formatter={(value) => `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               parser={(value) => value.replace(/₹\s?|(,*)/g, "")}
             />
-          </Form.Item>
+          </Form.Item> 
 
           <Form.Item
             name="stock"

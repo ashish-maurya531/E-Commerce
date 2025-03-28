@@ -10,13 +10,13 @@ router.get("/", productController.getAllProducts)
 router.get("/:id", productController.getProductById)
 
 // Create a new product (admin/franchiser only)
-router.post("/", verifyToken, isFranchiser, productController.createProduct)
+router.post("/", verifyToken, isAdmin, productController.createProduct)
 
 // Update a product (admin/franchiser only)
-router.put("/:id", verifyToken, isFranchiser, productController.updateProduct)
+router.put("/:id", verifyToken, isAdmin, productController.updateProduct)
 
 // Delete a product (admin only)
 router.delete("/:id", verifyToken, isAdmin, productController.deleteProduct)
 
-module.exports = router
+module.exports = router   
 

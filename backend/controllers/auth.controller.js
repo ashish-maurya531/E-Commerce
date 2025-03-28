@@ -58,7 +58,7 @@ const register = (req, res) => {
 // Login user
 const login = (req, res) => {
   try {
-    const { email, password } = req.body
+    const { email, password } = req.body 
 
     // Find user
     const user = users.find((user) => user.email === email)
