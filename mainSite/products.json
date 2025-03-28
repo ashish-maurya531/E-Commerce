@@ -1,0 +1,670 @@
+[
+    {
+      "id": 1,
+      "name": "Super Health",
+      "price": 499,
+      "originalPrice": 599,
+      "images": ["https://picsum.photos/300/300","https://picsum.photos/301/300"],
+      "category": "General Health & Wellness",
+      "shortDescription": "A premium supplement for overall health and wellness.",
+      "longDescription": " <h3>About This Product</h3>\n <p>Total Health is a comprehensive supplement designed to provide essential nutrients for overall well-being. It supports immunity, energy levels, heart health, and digestion.</p>\n\n <h3>Product Details</h3>\n <p>This supplement contains a balanced blend of vitamins, minerals, and natural extracts that help maintain a healthy lifestyle. Perfect for those looking to enhance their daily nutrition.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Boosts overall health and wellness</li>\n <li>Supports immune function and digestion</li>\n <li>Provides essential vitamins and minerals</li>\n <li>Enhances energy levels and vitality</li>\n <li>Suitable for daily use</li>\n </ul>",
+      "variants": [
+        { "id": 1, "name": "30 Capsules Pack", "inStock": true },
+        { "id": 2, "name": "60 Capsules Pack", "inStock": false },
+        { "id": 3, "name": "120 Capsules Pack", "inStock": true }
+      ],
+      "features": [
+        { "icon": "💊", "title": "Essential Nutrients", "description": "Packed with vitamins and minerals to support overall well-being" },
+        { "icon": "⚡", "title": "Boosts Energy", "description": "Helps improve energy levels and reduce fatigue" },
+        { "icon": "🛡️", "title": "Immunity Support", "description": "Enhances the body's natural defense system" },
+        { "icon": "🌿", "title": "Natural Ingredients", "description": "Made with high-quality, natural extracts" }
+      ],
+      "reviews": [
+        {
+          "id": 1,
+          "user": "Ananya R.",
+          "rating": 5,
+          "comment": "Great supplement! I've been using it for a month and feel more energetic.",
+          "date": "2024-03-18"
+        },
+        {
+          "id": 2,
+          "user": "Vikram P.",
+          "rating": 4,
+          "comment": "Good product, but I wish the bottle size was bigger.",
+          "date": "2024-03-10"
+        },
+        {
+          "id": 3,
+          "user": "Neha S.",
+          "rating": 5,
+          "comment": "Highly recommend it! Helped me with my daily energy levels.",
+          "date": "2024-02-25"
+        }
+      ],
+      "rating": 4.6,
+      "relatedProducts": [
+        {
+          "id": 2,
+          "name": "Liver Care",
+          "price": 599,
+          "image": "https://picsum.photos/300/300",
+          "category": "Liver & Kidney Health"
+        },
+        {
+          "id": 3,
+          "name": "Total Health",
+          "price": 699,
+          "image": "https://picsum.photos/300/300",
+          "category": "General Health & Wellness"
+        },
+        {
+          "id": 4,
+          "name": "Acai Berry",
+          "price": 799,
+          "image": "https://picsum.photos/300/300",
+          "category": "Immunity & Respiratory Health"
+        }
+      ],
+      "specifications": [
+        { "name": "Type", "value": "Health Supplement" },
+        { "name": "Ingredients", "value": "Essential vitamins, minerals, natural extracts" },
+        { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+        { "name": "Country of Origin", "value": "India" }
+      ],
+      "howToUse": "Take one capsule daily with water after meals or as directed by a healthcare professional."
+    },
+    {
+      "id": 2,
+      "name": "Liver Care",
+      "price": 599,
+      "originalPrice": 799,
+      "images": ["https://picsum.photos/300/300"],
+      "category": "Liver & Kidney Health",
+      "shortDescription": "A premium supplement designed to support liver and kidney health.",
+      "longDescription": " <h3>About This Product</h3>\n <p>Liver Care is a scientifically formulated supplement designed to support liver and kidney function. It helps detoxify the body, improve digestion, and promote overall well-being.</p>\n\n <h3>Product Details</h3>\n <p>This supplement is enriched with powerful natural ingredients that aid in liver detoxification, protect against toxins, and enhance metabolic functions.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Promotes liver detoxification and health</li>\n <li>Supports kidney function and urinary health</li>\n <li>Formulated with natural and herbal extracts</li>\n <li>Helps improve digestion and metabolism</li>\n <li>Suitable for daily use</li>\n </ul>",
+      "variants": [
+        { "id": 1, "name": "60 Capsules Pack", "inStock": true },
+        { "id": 2, "name": "120 Capsules Pack", "inStock": false }
+      ],
+      "features": [
+        { "icon": "🌿", "title": "Herbal Ingredients", "description": "Made with milk thistle, dandelion root, and other liver-supporting herbs" },
+        { "icon": "🛡️", "title": "Detox Support", "description": "Helps remove harmful toxins from the liver" },
+        { "icon": "💪", "title": "Supports Digestion", "description": "Aids in better digestion and nutrient absorption" },
+        { "icon": "⚕️", "title": "Clinically Tested", "description": "Developed using scientifically backed ingredients" }
+      ],
+      "reviews": [
+        {
+          "id": 1,
+          "user": "Rohan K.",
+          "rating": 5,
+          "comment": "Great supplement for liver health. Felt a difference in my digestion within a week!",
+          "date": "2024-03-22"
+        },
+        {
+          "id": 2,
+          "user": "Simran D.",
+          "rating": 4,
+          "comment": "Good product but takes time to show results.",
+          "date": "2024-03-14"
+        },
+        {
+          "id": 3,
+          "user": "Aakash M.",
+          "rating": 5,
+          "comment": "Been using this for a month now, and my liver enzyme levels have improved significantly!",
+          "date": "2024-02-27"
+        }
+      ],
+      "rating": 4.5,
+      "relatedProducts": [
+        {
+          "id": 1,
+          "name": "Super Health",
+          "price": 499,
+          "image": "https://picsum.photos/300/300",
+          "category": "General Health & Wellness"
+        },
+        {
+          "id": 3,
+          "name": "Total Health",
+          "price": 699,
+          "image": "https://picsum.photos/300/300",
+          "category": "General Health & Wellness"
+        },
+        {
+          "id": 4,
+          "name": "Acai Berry",
+          "price": 799,
+          "image": "https://picsum.photos/300/300",
+          "category": "Immunity & Respiratory Health"
+        }
+      ],
+      "specifications": [
+        { "name": "Type", "value": "Liver & Kidney Health Supplement" },
+        { "name": "Ingredients", "value": "Milk thistle, dandelion root, turmeric extract" },
+        { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+        { "name": "Country of Origin", "value": "India" }
+      ],
+      "howToUse": "Take one capsule daily with water after meals or as directed by a healthcare professional."
+    },
+    {
+      "id": 3,
+      "name": "Total Health",
+      "price": 699,
+      "originalPrice": 899,
+      "images": ["https://picsum.photos/300/300"],
+      "category": "General Health & Wellness",
+      "shortDescription": "A complete wellness supplement for overall health and vitality.",
+      "longDescription": " <h3>About This Product</h3>\n <p>Total Health is a comprehensive supplement designed to provide essential nutrients for overall well-being. It supports immunity, energy levels, heart health, and digestion.</p>\n\n <h3>Product Details</h3>\n <p>This supplement contains a balanced blend of vitamins, minerals, and natural extracts that help maintain a healthy lifestyle. Perfect for those looking to enhance their daily nutrition.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Boosts overall health and wellness</li>\n <li>Supports immune function and digestion</li>\n <li>Provides essential vitamins and minerals</li>\n <li>Enhances energy levels and vitality</li>\n <li>Suitable for daily use</li>\n </ul>",
+      "variants": [
+        { "id": 1, "name": "30 Capsules Pack", "inStock": true },
+        { "id": 2, "name": "60 Capsules Pack", "inStock": true },
+        { "id": 3, "name": "120 Capsules Pack", "inStock": false }
+      ],
+      "features": [
+        { "icon": "💊", "title": "Complete Nutrition", "description": "Packed with essential vitamins and minerals" },
+        { "icon": "🛡️", "title": "Immunity Support", "description": "Helps strengthen the immune system" },
+        { "icon": "⚡", "title": "Energy Boost", "description": "Increases energy levels and reduces fatigue" },
+        { "icon": "🌿", "title": "Natural Ingredients", "description": "Made with premium herbal extracts" }
+      ],
+      "reviews": [
+        {
+          "id": 1,
+          "user": "Ankit S.",
+          "rating": 5,
+          "comment": "Great all-in-one supplement! I feel more active and healthy.",
+          "date": "2024-03-22"
+        },
+        {
+          "id": 2,
+          "user": "Riya P.",
+          "rating": 4,
+          "comment": "Good product, but I wish it had a larger pack option.",
+          "date": "2024-03-15"
+        },
+        {
+          "id": 3,
+          "user": "Kunal M.",
+          "rating": 5,
+          "comment": "Highly recommended for those looking for overall wellness support.",
+          "date": "2024-02-28"
+        }
+      ],
+      "rating": 4.7,
+      "relatedProducts": [
+        {
+          "id": 1,
+          "name": "Super Health",
+          "price": 499,
+          "image": "https://picsum.photos/300/300",
+          "category": "General Health & Wellness"
+        },
+        {
+          "id": 2,
+          "name": "Liver Care",
+          "price": 599,
+          "image": "https://picsum.photos/300/300",
+          "category": "Liver & Kidney Health"
+        },
+        {
+          "id": 4,
+          "name": "Acai Berry",
+          "price": 799,
+          "image": "https://picsum.photos/300/300",
+          "category": "Immunity & Respiratory Health"
+        }
+      ],
+      "specifications": [
+        { "name": "Type", "value": "Multivitamin & Wellness Supplement" },
+        { "name": "Ingredients", "value": "Vitamins, minerals, herbal extracts" },
+        { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+        { "name": "Country of Origin", "value": "India" }
+      ],
+      "howToUse": "Take one capsule daily with water after meals or as directed by a healthcare professional."
+    },
+    {
+        "id": 4,
+        "name": "Acai Berry",
+        "price": 799,
+        "originalPrice": 999,
+        "images": ["https://picsum.photos/300/300"],
+        "category": "Immunity & Respiratory Health",
+        "shortDescription": "A powerful antioxidant supplement to support immunity and overall health.",
+        "longDescription": " <h3>About This Product</h3>\n <p>Acai Berry is a nutrient-rich supplement known for its high antioxidant content. It helps boost immunity, support cardiovascular health, and promote overall wellness.</p>\n\n <h3>Product Details</h3>\n <p>Loaded with vitamins, minerals, and essential fatty acids, Acai Berry helps fight free radicals, improve digestion, and enhance energy levels naturally.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Rich in antioxidants for immune support</li>\n <li>Promotes heart health and circulation</li>\n <li>Supports healthy skin and aging</li>\n <li>Enhances energy and metabolism</li>\n <li>Made from pure Acai Berry extract</li>\n </ul>",
+        "variants": [
+          { "id": 1, "name": "60 Capsules Pack", "inStock": true },
+          { "id": 2, "name": "120 Capsules Pack", "inStock": false }
+        ],
+        "features": [
+          { "icon": "🍇", "title": "High Antioxidant Content", "description": "Helps protect cells from oxidative stress" },
+          { "icon": "💖", "title": "Heart Health", "description": "Supports cardiovascular function" },
+          { "icon": "⚡", "title": "Boosts Energy", "description": "Enhances vitality and stamina" },
+          { "icon": "🌱", "title": "100% Natural", "description": "Made from pure Acai Berry extract" }
+        ],
+        "reviews": [
+          {
+            "id": 1,
+            "user": "Neha K.",
+            "rating": 5,
+            "comment": "Really good for boosting energy levels and skin health!",
+            "date": "2024-03-20"
+          },
+          {
+            "id": 2,
+            "user": "Amit R.",
+            "rating": 4,
+            "comment": "Effective, but the capsules are a bit large to swallow.",
+            "date": "2024-03-12"
+          },
+          {
+            "id": 3,
+            "user": "Priya S.",
+            "rating": 5,
+            "comment": "Great quality and value for money!",
+            "date": "2024-02-25"
+          }
+        ],
+        "rating": 4.6,
+        "relatedProducts": [
+          {
+            "id": 1,
+            "name": "Super Health",
+            "price": 499,
+            "image": "https://picsum.photos/300/300",
+            "category": "General Health & Wellness"
+          },
+          {
+            "id": 2,
+            "name": "Liver Care",
+            "price": 599,
+            "image": "https://picsum.photos/300/300",
+            "category": "Liver & Kidney Health"
+          },
+          {
+            "id": 3,
+            "name": "Total Health",
+            "price": 699,
+            "image": "https://picsum.photos/300/300",
+            "category": "General Health & Wellness"
+          }
+        ],
+        "specifications": [
+          { "name": "Type", "value": "Antioxidant & Wellness Supplement" },
+          { "name": "Ingredients", "value": "Pure Acai Berry Extract" },
+          { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+          { "name": "Country of Origin", "value": "India" }
+        ],
+        "howToUse": "Take two capsules daily with water after meals or as directed by a healthcare professional."
+      },      
+      {
+        "id": 5,
+        "name": "Cough Syrup",
+        "price": 299,
+        "originalPrice": 399,
+        "images": ["https://picsum.photos/300/300"],
+        "category": "Immunity & Respiratory Health",
+        "shortDescription": "A natural and effective syrup for cough relief and respiratory support.",
+        "longDescription": " <h3>About This Product</h3>\n <p>Cough Syrup is a herbal formulation designed to provide relief from cough, throat irritation, and congestion. It helps soothe the throat and support respiratory health.</p>\n\n <h3>Product Details</h3>\n <p>Made with a blend of natural ingredients like honey, tulsi, and ginger, this syrup helps clear mucus, ease breathing, and boost immunity.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Provides quick relief from cough and sore throat</li>\n <li>Supports respiratory and lung health</li>\n <li>Enriched with natural herbal ingredients</li>\n <li>Non-drowsy and safe for daily use</li>\n <li>Suitable for all age groups</li>\n </ul>",
+        "variants": [
+          { "id": 1, "name": "100ml Bottle", "inStock": true },
+          { "id": 2, "name": "200ml Bottle", "inStock": true }
+        ],
+        "features": [
+          { "icon": "🌿", "title": "Herbal Formula", "description": "Made with natural ingredients like tulsi, honey, and ginger" },
+          { "icon": "😌", "title": "Soothes Throat", "description": "Helps relieve throat irritation and dryness" },
+          { "icon": "🫁", "title": "Respiratory Support", "description": "Clears mucus and supports lung health" },
+          { "icon": "🔄", "title": "Fast-Acting", "description": "Provides quick relief without drowsiness" }
+        ],
+        "reviews": [
+          {
+            "id": 1,
+            "user": "Rahul S.",
+            "rating": 5,
+            "comment": "Really effective! Helped with my cough within a day.",
+            "date": "2024-03-18"
+          },
+          {
+            "id": 2,
+            "user": "Pooja M.",
+            "rating": 4,
+            "comment": "Good syrup, but the taste is a bit strong.",
+            "date": "2024-03-10"
+          },
+          {
+            "id": 3,
+            "user": "Arjun K.",
+            "rating": 5,
+            "comment": "Best natural cough syrup I've used. Highly recommend!",
+            "date": "2024-02-22"
+          }
+        ],
+        "rating": 4.7,
+        "relatedProducts": [
+          {
+            "id": 1,
+            "name": "Super Health",
+            "price": 499,
+            "image": "https://picsum.photos/300/300",
+            "category": "General Health & Wellness"
+          },
+          {
+            "id": 4,
+            "name": "Acai Berry",
+            "price": 799,
+            "image": "https://picsum.photos/300/300",
+            "category": "Immunity & Respiratory Health"
+          },
+          {
+            "id": 2,
+            "name": "Liver Care",
+            "price": 599,
+            "image": "https://picsum.photos/300/300",
+            "category": "Liver & Kidney Health"
+          }
+        ],
+        "specifications": [
+          { "name": "Type", "value": "Herbal Cough Syrup" },
+          { "name": "Ingredients", "value": "Tulsi, Honey, Ginger, Mulethi" },
+          { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+          { "name": "Country of Origin", "value": "India" }
+        ],
+        "howToUse": "Take 2 teaspoons twice a day or as directed by a healthcare professional."
+      },
+      {
+        "id": 6,
+        "name": "Piles Care",
+        "price": 549,
+        "originalPrice": 699,
+        "images": ["https://picsum.photos/300/300"],
+        "category": "Digestive & Gut Health",
+        "shortDescription": "A natural remedy for relief from piles, constipation, and digestive discomfort.",
+        "longDescription": " <h3>About This Product</h3>\n <p>Piles Care is a herbal supplement designed to provide relief from piles (hemorrhoids), constipation, and associated discomfort. It supports digestive health and promotes smooth bowel movements.</p>\n\n <h3>Product Details</h3>\n <p>Formulated with powerful natural ingredients, Piles Care helps reduce swelling, pain, and irritation while improving gut health.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Provides relief from piles and constipation</li>\n <li>Reduces pain, swelling, and irritation</li>\n <li>Supports digestive and gut health</li>\n <li>Formulated with natural herbal extracts</li>\n <li>Safe for long-term use</li>\n </ul>",
+        "variants": [
+          { "id": 1, "name": "60 Tablets Pack", "inStock": true },
+          { "id": 2, "name": "120 Tablets Pack", "inStock": false }
+        ],
+        "features": [
+          { "icon": "🌿", "title": "Herbal Formula", "description": "Made with natural extracts for effective relief" },
+          { "icon": "💪", "title": "Soothes Discomfort", "description": "Helps reduce pain, swelling, and irritation" },
+          { "icon": "🦠", "title": "Supports Gut Health", "description": "Improves digestion and prevents constipation" },
+          { "icon": "🔄", "title": "Safe for Daily Use", "description": "Non-habit forming and gentle on the body" }
+        ],
+        "reviews": [
+          {
+            "id": 1,
+            "user": "Rajesh K.",
+            "rating": 5,
+            "comment": "Very effective for piles relief. Worked within a few days!",
+            "date": "2024-03-19"
+          },
+          {
+            "id": 2,
+            "user": "Sneha P.",
+            "rating": 4,
+            "comment": "Good product, but results take some time.",
+            "date": "2024-03-08"
+          },
+          {
+            "id": 3,
+            "user": "Vikram S.",
+            "rating": 5,
+            "comment": "Best natural remedy for digestive health and piles.",
+            "date": "2024-02-26"
+          }
+        ],
+        "rating": 4.6,
+        "relatedProducts": [
+          {
+            "id": 1,
+            "name": "Super Health",
+            "price": 499,
+            "image": "https://picsum.photos/300/300",
+            "category": "General Health & Wellness"
+          },
+          {
+            "id": 2,
+            "name": "Liver Care",
+            "price": 599,
+            "image": "https://picsum.photos/300/300",
+            "category": "Liver & Kidney Health"
+          },
+          {
+            "id": 5,
+            "name": "Cough Syrup",
+            "price": 299,
+            "image": "https://picsum.photos/300/300",
+            "category": "Immunity & Respiratory Health"
+          }
+        ],
+        "specifications": [
+          { "name": "Type", "value": "Herbal Digestive Supplement" },
+          { "name": "Ingredients", "value": "Haritaki, Triphala, Aloe Vera, Neem" },
+          { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+          { "name": "Country of Origin", "value": "India" }
+        ],
+        "howToUse": "Take 2 tablets daily with water after meals or as directed by a healthcare professional."
+      },
+      {
+        "id": 7,
+        "name": "Ortho Care",
+        "price": 699,
+        "originalPrice": 899,
+        "images": ["https://picsum.photos/300/300"],
+        "category": "Joint & Bone Health",
+        "shortDescription": "A natural supplement for joint pain relief, flexibility, and bone strength.",
+        "longDescription": " <h3>About This Product</h3>\n <p>Ortho Care is a specially formulated supplement designed to support joint mobility, reduce stiffness, and promote bone health. It helps relieve pain and discomfort caused by arthritis and aging.</p>\n\n <h3>Product Details</h3>\n <p>Enriched with powerful herbal ingredients like Boswellia, Turmeric, and Glucosamine, this supplement helps strengthen bones, lubricate joints, and improve flexibility.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Provides relief from joint pain and stiffness</li>\n <li>Supports bone strength and cartilage health</li>\n <li>Enhances mobility and flexibility</li>\n <li>Formulated with natural and herbal extracts</li>\n <li>Safe for long-term use</li>\n </ul>",
+        "variants": [
+          { "id": 1, "name": "60 Tablets Pack", "inStock": true },
+          { "id": 2, "name": "120 Tablets Pack", "inStock": true }
+        ],
+        "features": [
+          { "icon": "🦴", "title": "Joint & Bone Support", "description": "Helps strengthen bones and improve joint function" },
+          { "icon": "🌿", "title": "Herbal Formula", "description": "Contains Boswellia, Turmeric, and other natural extracts" },
+          { "icon": "💪", "title": "Pain Relief", "description": "Reduces joint stiffness and discomfort" },
+          { "icon": "🔄", "title": "Improves Mobility", "description": "Enhances flexibility and range of motion" }
+        ],
+        "reviews": [
+          {
+            "id": 1,
+            "user": "Amit K.",
+            "rating": 5,
+            "comment": "Great supplement for joint pain. I feel much better after using it for a month.",
+            "date": "2024-03-21"
+          },
+          {
+            "id": 2,
+            "user": "Meera S.",
+            "rating": 4,
+            "comment": "Good for flexibility, but takes some time to show results.",
+            "date": "2024-03-09"
+          },
+          {
+            "id": 3,
+            "user": "Rajesh P.",
+            "rating": 5,
+            "comment": "Highly recommended for those with knee pain and arthritis.",
+            "date": "2024-02-28"
+          }
+        ],
+        "rating": 4.7,
+        "relatedProducts": [
+          {
+            "id": 1,
+            "name": "Super Health",
+            "price": 499,
+            "image": "https://picsum.photos/300/300",
+            "category": "General Health & Wellness"
+          },
+          {
+            "id": 2,
+            "name": "Liver Care",
+            "price": 599,
+            "image": "https://picsum.photos/300/300",
+            "category": "Liver & Kidney Health"
+          },
+          {
+            "id": 6,
+            "name": "Piles Care",
+            "price": 549,
+            "image": "https://picsum.photos/300/300",
+            "category": "Digestive & Gut Health"
+          }
+        ],
+        "specifications": [
+          { "name": "Type", "value": "Joint & Bone Health Supplement" },
+          { "name": "Ingredients", "value": "Boswellia, Turmeric, Glucosamine, Calcium" },
+          { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+          { "name": "Country of Origin", "value": "India" }
+        ],
+        "howToUse": "Take 2 tablets daily with water after meals or as directed by a healthcare professional."
+      },
+      {
+        "id": 8,
+        "name": "Bhringraj Hair Oil",
+        "price": 399,
+        "originalPrice": 499,
+        "images": ["https://picsum.photos/300/300"],
+        "category": "Skin & Hair Care",
+        "shortDescription": "A nourishing herbal oil for stronger, healthier, and shinier hair.",
+        "longDescription": " <h3>About This Product</h3>\n <p>Bhringraj Hair Oil is a deeply nourishing Ayurvedic oil that helps strengthen hair, reduce hair fall, and promote hair growth. It revitalizes the scalp, improves blood circulation, and prevents dandruff.</p>\n\n <h3>Product Details</h3>\n <p>Enriched with Bhringraj, Amla, and other natural herbs, this oil penetrates deeply into the scalp, providing essential nutrients for healthy and lustrous hair.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Reduces hair fall and strengthens roots</li>\n <li>Promotes hair growth and scalp health</li>\n <li>Prevents dandruff and dryness</li>\n <li>Made with natural and herbal ingredients</li>\n <li>Suitable for all hair types</li>\n </ul>",
+        "variants": [
+          { "id": 1, "name": "100ml Bottle", "inStock": true },
+          { "id": 2, "name": "200ml Bottle", "inStock": true }
+        ],
+        "features": [
+          { "icon": "🌿", "title": "Herbal Formula", "description": "Infused with Bhringraj, Amla, and other Ayurvedic herbs" },
+          { "icon": "💆", "title": "Strengthens Hair", "description": "Reduces hair fall and nourishes the scalp" },
+          { "icon": "🌟", "title": "Promotes Growth", "description": "Enhances hair thickness and shine" },
+          { "icon": "❄️", "title": "Soothes Scalp", "description": "Prevents dandruff and dryness" }
+        ],
+        "reviews": [
+          {
+            "id": 1,
+            "user": "Anjali R.",
+            "rating": 5,
+            "comment": "Amazing oil! My hair feels much stronger and healthier.",
+            "date": "2024-03-20"
+          },
+          {
+            "id": 2,
+            "user": "Vikas M.",
+            "rating": 4,
+            "comment": "Good product, but it has a strong herbal smell.",
+            "date": "2024-03-12"
+          },
+          {
+            "id": 3,
+            "user": "Sneha T.",
+            "rating": 5,
+            "comment": "Best oil for hair fall control. Highly recommend!",
+            "date": "2024-02-25"
+          }
+        ],
+        "rating": 4.7,
+        "relatedProducts": [
+          {
+            "id": 3,
+            "name": "Total Health",
+            "price": 699,
+            "image": "https://picsum.photos/300/300",
+            "category": "General Health & Wellness"
+          },
+          {
+            "id": 6,
+            "name": "Piles Care",
+            "price": 549,
+            "image": "https://picsum.photos/300/300",
+            "category": "Digestive & Gut Health"
+          },
+          {
+            "id": 7,
+            "name": "Ortho Care",
+            "price": 699,
+            "image": "https://picsum.photos/300/300",
+            "category": "Joint & Bone Health"
+          }
+        ],
+        "specifications": [
+          { "name": "Type", "value": "Ayurvedic Hair Oil" },
+          { "name": "Ingredients", "value": "Bhringraj, Amla, Brahmi, Coconut Oil" },
+          { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+          { "name": "Country of Origin", "value": "India" }
+        ],
+        "howToUse": "Massage gently into the scalp and leave it for at least an hour before washing. Use 2-3 times a week for best results."
+      },
+      {
+        "id": 9,
+        "name": "Aloe Vera Shampoo",
+        "price": 499,
+        "originalPrice": 599,
+        "images": ["https://picsum.photos/300/300"],
+        "category": "Skin & Hair Care",
+        "shortDescription": "A gentle, herbal shampoo for soft, nourished, and healthy hair.",
+        "longDescription": " <h3>About This Product</h3>\n <p>Aloe Vera Shampoo is a mild and nourishing herbal shampoo that cleanses the scalp, hydrates hair, and promotes hair health. It helps reduce dryness, dandruff, and irritation while leaving hair soft and shiny.</p>\n\n <h3>Product Details</h3>\n <p>Enriched with Aloe Vera, Hibiscus, and other natural ingredients, this shampoo provides deep hydration and strengthens hair from root to tip.</p>\n\n <h3>Key Features</h3>\n <ul>\n <li>Hydrates and nourishes hair</li>\n <li>Reduces dandruff and scalp irritation</li>\n <li>Strengthens hair and prevents breakage</li>\n <li>Made with Aloe Vera and herbal extracts</li>\n <li>Suitable for all hair types</li>\n </ul>",
+        "variants": [
+          { "id": 1, "name": "200ml Bottle", "inStock": true },
+          { "id": 2, "name": "500ml Bottle", "inStock": true }
+        ],
+        "features": [
+          { "icon": "🌿", "title": "Herbal Formula", "description": "Enriched with Aloe Vera, Hibiscus, and other natural extracts" },
+          { "icon": "💆", "title": "Deep Hydration", "description": "Moisturizes and softens hair" },
+          { "icon": "❄️", "title": "Soothes Scalp", "description": "Reduces dandruff and irritation" },
+          { "icon": "🌟", "title": "Strengthens Hair", "description": "Prevents breakage and promotes growth" }
+        ],
+        "reviews": [
+          {
+            "id": 1,
+            "user": "Priya S.",
+            "rating": 5,
+            "comment": "Leaves my hair soft and shiny! Love the natural ingredients.",
+            "date": "2024-03-18"
+          },
+          {
+            "id": 2,
+            "user": "Rohan K.",
+            "rating": 4,
+            "comment": "Good shampoo, but I wish it had a stronger fragrance.",
+            "date": "2024-03-10"
+          },
+          {
+            "id": 3,
+            "user": "Simran D.",
+            "rating": 5,
+            "comment": "Great for dandruff and scalp hydration. Highly recommend!",
+            "date": "2024-02-27"
+          }
+        ],
+        "rating": 4.7,
+        "relatedProducts": [
+          {
+            "id": 8,
+            "name": "Bhringraj Hair Oil",
+            "price": 399,
+            "image": "https://picsum.photos/300/300",
+            "category": "Skin & Hair Care"
+          },
+          {
+            "id": 3,
+            "name": "Total Health",
+            "price": 699,
+            "image": "https://picsum.photos/300/300",
+            "category": "General Health & Wellness"
+          },
+          {
+            "id": 7,
+            "name": "Ortho Care",
+            "price": 699,
+            "image": "https://picsum.photos/300/300",
+            "category": "Joint & Bone Health"
+          }
+        ],
+        "specifications": [
+          { "name": "Type", "value": "Herbal Shampoo" },
+          { "name": "Ingredients", "value": "Aloe Vera, Hibiscus, Neem, Amla" },
+          { "name": "Shelf Life", "value": "24 months from manufacturing date" },
+          { "name": "Country of Origin", "value": "India" }
+        ],
+        "howToUse": "Apply a small amount to wet hair, lather, and rinse thoroughly. Use regularly for best results."
+      }                                      
+  ]

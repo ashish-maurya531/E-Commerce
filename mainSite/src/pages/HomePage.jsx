@@ -13,10 +13,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingOutlined } from "@ant-design/icons";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Featuresection from "../components/Featuresection";
 import WhyUs from "../components/WhyUs";
 import { useCart } from "../CartContext.jsx";
 import ProductCard from "./ProductsPage/ProductCard.jsx";
+import Featuresection from "../components/Featuresection.jsx";
 const { Content } = Layout;
 const { Title, Text } = Typography;
 const { Meta } = Card;
@@ -147,7 +147,7 @@ const HomePage = () => {
     try {
       // Simulating a product fetch or filtering
       const data = featuredProducts.map((product, index) => ({
-        id: index + 1,
+        id: product.id,
         name: product.name,
         price: product.price,
         originalPrice: Math.round(product.price * 1.5),
@@ -175,7 +175,7 @@ const HomePage = () => {
     try {
       // Simulating a product fetch or filtering
       const data = newArrivals.map((product, index) => ({
-        id: index + 1,
+        id: product.id,
         name: product.name,
         price: product.price,
         originalPrice: Math.round(product.price * 1.5),
@@ -210,7 +210,7 @@ const HomePage = () => {
       <Content>
         <Carousel
           autoplay
-          autoplaySpeed={3000}
+          autoplaySpeed={4000}
           pauseOnHover={false}
           effect="fade"
         >
@@ -689,6 +689,7 @@ const HomePage = () => {
             </div>
           )}
         </div>
+        
         {/* Testimonials */}
         <div style={{ padding: "60px 50px" }}>
           <Title

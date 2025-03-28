@@ -187,7 +187,7 @@ function ProductsPage() {
       setLoading(true)
       try {
         const data = filteredProducts.map((product, index) => ({
-          id: index + 1,
+          id: product.id,
           name: product.name,
           price: product.price,
           originalPrice: Math.round(product.price * 1.5), // Assuming a 50% markup for original price

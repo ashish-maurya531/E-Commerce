@@ -1,15 +1,17 @@
 "use client"
 
+import { useNavigate } from "react-router-dom";
 import { useState } from "react"
 import "../../styles/ProductCard.css"
 import { useCart } from "../../CartContext.jsx";
 
 function ProductCard({ product }) {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false)
   const { addToCart } = useCart();
   return (
     <div className="product-card" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}
-    onClick={() => window.location.href = `/product/${product.id}`}>
+    onClick={() => navigate(`/product/${product.id}`)}>
       {/* Product Image */}
       <div className="product-image-container">
         <img

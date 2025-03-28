@@ -35,7 +35,7 @@ function App() {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/category/:categoryName" element={<ProductsPage />} />
           <Route path="/store-locator" element={<StoreLocatorPage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
           {/* Protected Routes */}
           <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
