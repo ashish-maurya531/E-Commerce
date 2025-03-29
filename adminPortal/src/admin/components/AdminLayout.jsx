@@ -49,16 +49,16 @@ const AdminLayout = ({ children }) => {
       onClick: () => handleMenuClick("/admin/dashboard"),
     },
     {
+      key: "categories",
+      icon: <AppstoreOutlined />,
+      label: "Categories",
+      onClick: () => handleMenuClick("/admin/categories"),
+    },
+    {
       key: "products",
       icon: <ShoppingOutlined />,
       label: "Products",
       onClick: () => handleMenuClick("/admin/products"),
-    },
-    {
-      key: "orders",
-      icon: <ShoppingCartOutlined />,
-      label: "Orders",
-      onClick: () => handleMenuClick("/admin/orders"),
     },
     {
       key: "inventory",
@@ -67,16 +67,16 @@ const AdminLayout = ({ children }) => {
       onClick: () => handleMenuClick("/admin/inventory"),
     },
     {
+      key: "orders",
+      icon: <ShoppingCartOutlined />,
+      label: "Orders",
+      onClick: () => handleMenuClick("/admin/orders"),
+    },
+    {
       key: "users",
       icon: <UserOutlined />,
       label: "Users",
       onClick: () => handleMenuClick("/admin/users"),
-    },
-    {
-      key: "categories",
-      icon: <AppstoreOutlined />,
-      label: "Categories",
-      onClick: () => handleMenuClick("/admin/categories"),
     },
     {
       key: "reports",

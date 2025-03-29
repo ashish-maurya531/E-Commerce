@@ -15,7 +15,7 @@ router.post("/", verifyToken, isAdmin, productController.createProduct)
 // Update a product (admin/franchiser only)
 router.put("/:id", verifyToken, isAdmin, productController.updateProduct)
 
-// Delete a product (admin only)
+// Delete a product (admin only)     
 router.delete("/:id", verifyToken, isAdmin, productController.deleteProduct)
 
 module.exports = router   

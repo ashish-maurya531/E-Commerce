@@ -1,25 +1,25 @@
-const express = require("express")
-const router = express.Router()
-const orderController = require("../controllers/order.controller")
-const { verifyToken, isAdmin, isDistributor } = require("../middleware/auth.middleware")
+const express = require("express");
+const router = express.Router();
+const orderController = require("../controllers/order.controller");
+const { verifyToken, isAdmin, isDistributor } = require("../middleware/auth.middleware");
 
-// Get all orders (admin/distributor only)
-router.get("/", verifyToken, isDistributor, orderController.getAllOrders)
+// // Get all orders (admin/distributor only)
+// // router.get("/", verifyToken, isDistributor, orderController.getAllOrders);
 
-// Get a single order by ID
-router.get("/:id", verifyToken, orderController.getOrderById)
+// // Get a single order by ID
+// router.get("/:id", verifyToken, orderController.getOrderById);
 
-// Create a new order
-router.post("/", verifyToken, orderController.createOrder)
+// // Create a new order
+// router.post("/", verifyToken, orderController.createOrder);
 
-// Update order status (admin/distributor only)
-router.put("/:id/status", verifyToken, isDistributor, orderController.updateOrderStatus)
+// // Update order status (admin/distributor only)
+// router.put("/:id/status", verifyToken, isDistributor, orderController.updateOrderStatus);
 
-// Cancel an order
-router.put("/:id/cancel", verifyToken, orderController.cancelOrder)
+// // Cancel an order
+// // router.put("/:id/cancel", verifyToken, orderController.cancelOrder);
 
-// Get order history for a user
-router.get("/user/history", verifyToken, orderController.getUserOrderHistory)
+// // Get order history for a user
+// router.get("/user/history", verifyToken, orderController.getUserOrderHistory);
 
-module.exports = router
+module.exports = router;
 

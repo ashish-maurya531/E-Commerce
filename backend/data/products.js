@@ -17,7 +17,7 @@ const products = [
     franchiser_id: 2,
     status: "Active",
     createdAt: "2023-01-15T00:00:00.000Z",
-    updatedAt: "2023-03-10T00:00:00.000Z",
+    updatedAt: "2023-03-10T00:00:00.000Z",    
   },
   {
     id: 2,
