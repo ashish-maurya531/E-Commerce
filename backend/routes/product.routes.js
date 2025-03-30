@@ -1,22 +1,17 @@
-const express = require("express")
-const router = express.Router()
-const productController = require("../controllers/product.controller")
-const { verifyToken, isAdmin, isFranchiser } = require("../middleware/auth.middleware")
+const express = require('express');
+const router = express.Router();
+const productController = require('../controllers/product.controller');
 
-// Get all products (public)
-router.get("/", productController.getAllProducts)
+// Product routes
+router.get('/', productController.getAllProducts);
+router.get('/:id', productController.getProductById);
+router.post('/', productController.createProduct);           // Add product
+router.put('/:id', productController.updateProduct);        // Update product
+router.delete('/:id', productController.deleteProduct);     // Delete product
 
-// Get a single product by ID (public)
-router.get("/:id", productController.getProductById)
+// Review routes
+router.get('/:id/reviews', productController.getProductReviews);
+router.post('/:id/reviews', productController.addReview);
 
-// Create a new product (admin/franchiser only)
-router.post("/", verifyToken, isAdmin, productController.createProduct)
-
-// Update a product (admin/franchiser only)
-router.put("/:id", verifyToken, isAdmin, productController.updateProduct)
-
-// Delete a product (admin only)     
-router.delete("/:id", verifyToken, isAdmin, productController.deleteProduct)
-
-module.exports = router   
+module.exports = router;
 

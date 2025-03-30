@@ -62,11 +62,20 @@ const isDistributor = (req, res, next) => {
     res.status(403).json({ message: "Requires distributor role" })
   }
 }
+// is normal user 
+const isUser = (req, res, next) => {
+  if (req.user && req.user.role === "user") {
+    next()
+  } else {
+    res.status(403).json({ message: "Requires user role" })
+  }
+}
 
 module.exports = {
   verifyToken,
   isAdmin,
   isFranchiser,
   isDistributor,
+  isUser,
 }
 

@@ -10,7 +10,7 @@ const api = axios.create({
 // Add request interceptor to include auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken')
+    const token = localStorage.getItem('adminAccessToken')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -29,12 +29,12 @@ api.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
-        const refreshToken = localStorage.getItem('refreshToken')
-        const response = await axios.post('http://localhost:5000/api/auth/refresh-token', {
+        const refreshToken = localStorage.getItem('adminRefreshToken')
+        const response = await axios.post('http://localhost:5000/api/admin/auth/refresh-token', {
           refreshToken
         })
-        localStorage.setItem('accessToken', response.data.accessToken)
-        originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`
+        localStorage.setItem('adminAccessToken', response.data.adminAccessToken)
+        originalRequest.headers.Authorization = `Bearer ${response.data.adminAccessToken}`
         return api(originalRequest)
       } catch (error) {
         localStorage.clear()

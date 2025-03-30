@@ -1,22 +1,29 @@
 const express = require("express")
 const router = express.Router()
 const userController = require("../controllers/user.controller")
-const { verifyToken, isAdmin } = require("../middleware/auth.middleware")
+const { verifyToken, isAdmin,isUser } = require("../middleware/auth.middleware")
 
 // Get all users (admin only)
-router.get("/", verifyToken, isAdmin, userController.getAllUsers)
-
-// Get a single user by ID (admin only)
-router.get("/:id", verifyToken, isAdmin, userController.getUserById)
-
-// Create a new user (admin only)
-router.post("/", verifyToken, isAdmin, userController.createUser)
-
-// Update a user (admin only)
+router.get("/", verifyToken,isAdmin, userController.getAllUsers)
 router.put("/:id", verifyToken, isAdmin, userController.updateUser)
-
-// Delete a user (admin only)
 router.delete("/:id", verifyToken, isAdmin, userController.deleteUser)
+
+
+
+
+router.post("/",userController.createUser)
+
+router.get("/getUser",userController.getUserById)
+
+router.put("/user-profile", verifyToken,isUser, userController.updateUserProfile)
+
+///user login 
+router.post("/user-login", userController.userLogin)
+///user logout
+router.post("/user-logout", userController.userLogout)
+//user refresh token 
+router.post("/user-refresh-token", userController.user_refreshToken)
 
 module.exports = router
 
+      

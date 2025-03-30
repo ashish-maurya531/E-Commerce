@@ -1,80 +1,82 @@
-import api from "./api"
-
-// Register a new user
-const register = async (userData) => {
-  const response = await api.post("/auth/register", userData)
-  return response.data
-}
-
-// Login user
-const login = async (email, password) => {
-  try {
-    const response = await api.post("/auth/login", { email, password })
-    if (response.data.accessToken) {
-      localStorage.setItem("accessToken", response.data.accessToken)
-      localStorage.setItem("refreshToken", response.data.refreshToken)
-      localStorage.setItem("user", JSON.stringify(response.data.user))
-    } 
-    return response.data
-  } catch (error) {
-    throw error
-  }
-}
-
-const logout = async () => {
-  const refreshToken = localStorage.getItem("refreshToken")
-  if (refreshToken) {
-    try {
-      await api.post("/auth/logout", { refreshToken })
-    } catch (error) {
-      console.error("Logout error:", error)
-    }
-  }
-  localStorage.clear()
-}
-
-// Add a new method to check refresh token validity
-const checkRefreshToken = async () => {
-  const refreshToken = localStorage.getItem("refreshToken")
-  if (!refreshToken) return false
-
-  try {
-    const response = await api.post("/auth/refresh-token", { refreshToken })
-    if (response.data.accessToken) {
-      localStorage.setItem("accessToken", response.data.accessToken)
-      return true
-    }
-    return false
-  } catch (error) {
-    return false
-  }
-}
-
-// Get current user
-const getCurrentUser = () => {
-  const userStr = localStorage.getItem("user")
-  if (userStr) {
-    return JSON.parse(userStr)
-  }
-  return null
-}
-
-// Get user profile
-const getProfile = async () => {
-  const response = await api.get("/auth/profile")
-  return response.data
-}
+import api from "./api";
 
 const authService = {
-  register,
-  login,
-  logout,
-  getCurrentUser,
-  getProfile,
-  checkRefreshToken,
-}
+  // Admin Login
+  login: async (email, password) => {
+    try {
+      const response = await api.post("/admin/auth/login", { email, password });
+      if (response.data.adminAccessToken) {
+        localStorage.setItem("adminAccessToken", response.data.adminAccessToken);
+        localStorage.setItem("adminRefreshToken", response.data.adminRefreshToken);
+        localStorage.setItem("adminUser", JSON.stringify(response.data.adminUser));
+      }
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-export default authService
+  // Admin Logout
+  logout: async () => {
+    try {
+      const refreshToken = localStorage.getItem("adminRefreshToken");
+      if (refreshToken) {
+        await api.post("/admin/auth/logout", { refreshToken });
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      localStorage.removeItem("adminAccessToken");
+      localStorage.removeItem("adminRefreshToken");
+      localStorage.removeItem("adminUser");
+    }
+  },
+
+  // Get current admin user
+  getCurrentUser: () => {
+    try {
+      const userStr = localStorage.getItem("adminUser");
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (error) {
+      console.error("Error getting current user:", error);
+      return null;
+    }
+  },
+
+  // Check if user is authenticated
+  isAuthenticated: () => {
+    const token = localStorage.getItem("adminAccessToken");
+    const user = localStorage.getItem("adminUser");
+    return !!(token && user);
+  },
+
+  // Refresh token
+  refreshToken: async () => {
+    try {
+      const refreshToken = localStorage.getItem("adminRefreshToken");
+      console.log("Refreshing token from", refreshToken);
+      console.log("Refreshing token with:", refreshToken);
+      if (!refreshToken) throw new Error("No refresh token found");
+
+      const response = await api.post("/admin/auth/refresh-token", { refreshToken });
+      if (response.data.adminAccessToken) {
+        localStorage.setItem("adminAccessToken", response.data.adminAccessToken);
+        return response.data.adminAccessToken;
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+  getProfile: async () => {
+    console.log("Getting profile...");
+    const response = await api.get("/admin/auth/profile")
+    return response.data
+  }
+};
+
+
+
+export default authService;
 
 
 

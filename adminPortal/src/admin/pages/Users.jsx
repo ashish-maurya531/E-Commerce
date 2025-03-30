@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Table,
   Button,
@@ -16,8 +16,9 @@ import {
   EditOutlined,
   DeleteOutlined,
   SearchOutlined,
-} from "@ant-design/icons"
+} from "@ant-design/icons"   
 import AdminLayout from "../components/AdminLayout"
+import userService from "../../services/user.service"
 
 const { Title } = Typography
 const { Option } = Select
@@ -26,32 +27,57 @@ const Users = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [form] = Form.useForm()
   const [editingUser, setEditingUser] = useState(null)
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  // Sample user data
-  const users = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Customer",
-      status: "Active",
-      joinDate: "2023-01-15",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      role: "Admin",
-      status: "Active",
-      joinDate: "2023-02-20",
-    },
-  ]
+  // Fetch users
+  const fetchUsers = async () => {
+    try {
+      setLoading(true)
+      const data = await userService.getAllUsers()
+      setUsers(data)
+    } catch (error) {
+      message.error("Failed to fetch users")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
+  const handleSubmit = async (values) => {
+    try {
+      if (editingUser) {
+        await userService.updateUser(editingUser.id, values)
+        message.success("User updated successfully")
+      } else {
+        await userService.createUser(values)
+        message.success("User added successfully")
+      }
+      setIsModalVisible(false)
+      fetchUsers()
+    } catch (error) {
+      message.error(error.response?.data?.message || "Operation failed")
+    }
+  }
+
+  const handleDelete = async (userId) => {
+    try {
+      await userService.deleteUser(userId)
+      message.success("User deleted successfully")
+      fetchUsers()
+    } catch (error) {
+      message.error("Failed to delete user")
+    }
+  }
 
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
       key: "name",
+      render: (record) => `${record.firstname} ${record.lastname}`,
     },
     {
       title: "Email",
@@ -59,11 +85,16 @@ const Users = () => {
       key: "email",
     },
     {
+      title: "Phone",
+      dataIndex: "phoneno",
+      key: "phoneno",
+    },
+    {
       title: "Role",
       dataIndex: "role",
       key: "role",
       render: (role) => (
-        <Tag color={role === "Admin" ? "blue" : "green"}>{role}</Tag>
+        <Tag color={role === "admin" ? "blue" : "green"}>{role}</Tag>
       ),
     },
     {
@@ -76,8 +107,9 @@ const Users = () => {
     },
     {
       title: "Join Date",
-      dataIndex: "joinDate",
-      key: "joinDate",
+      dataIndex: "createdat",
+      key: "createdat",
+      render: (date) => new Date(date).toLocaleDateString(),
     },
     {
       title: "Action",
@@ -88,7 +120,18 @@ const Users = () => {
             icon={<EditOutlined />}
             onClick={() => {
               setEditingUser(record)
-              form.setFieldsValue(record)
+              form.setFieldsValue({
+                firstname: record.firstname,
+                lastname: record.lastname,
+                email: record.email,
+                phoneno: record.phoneno,
+                address: record.address,
+                city: record.city,
+                state: record.state,
+                pincode: record.pincode,
+                role: record.role,
+                status: record.status,
+              })
               setIsModalVisible(true)
             }}
           />
@@ -100,7 +143,7 @@ const Users = () => {
                 title: "Are you sure you want to delete this user?",
                 content: "This action cannot be undone.",
                 onOk() {
-                  message.success("User deleted successfully")
+                  handleDelete(record.id)
                 },
               })
             }}
@@ -128,25 +171,35 @@ const Users = () => {
           </Button>
         </div>
 
-        <Table columns={columns} dataSource={users} rowKey="id" />
+        <Table 
+          columns={columns} 
+          dataSource={users} 
+          rowKey="id" 
+          loading={loading}
+        />
 
         <Modal
           title={editingUser ? "Edit User" : "Add User"}
           open={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
-          onOk={() => {
-            form.validateFields().then((values) => {
-              console.log(values)
-              message.success(`User ${editingUser ? "updated" : "added"} successfully`)
-              setIsModalVisible(false)
-            })
-          }}
+          onOk={() => form.submit()}
         >
-          <Form form={form} layout="vertical">
+          <Form 
+            form={form} 
+            layout="vertical"
+            onFinish={handleSubmit}
+          >
             <Form.Item
-              name="name"
-              label="Name"
-              rules={[{ required: true, message: "Please enter name" }]}
+              name="firstname"
+              label="First Name"
+              rules={[{ required: true, message: "Please enter first name" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="lastname"
+              label="Last Name"
+              rules={[{ required: true, message: "Please enter last name" }]}
             >
               <Input />
             </Form.Item>
@@ -160,16 +213,48 @@ const Users = () => {
             >
               <Input />
             </Form.Item>
+            {!editingUser && (
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[{ required: true, message: "Please enter password" }]}
+              >
+                <Input.Password />
+              </Form.Item>
+            )}
             <Form.Item
-              name="role"
-              label="Role"
-              rules={[{ required: true, message: "Please select role" }]}
+              name="phoneno"
+              label="Phone Number"
+              rules={[{ required: true, message: "Please enter phone number" }]}
             >
-              <Select>
-                <Option value="Admin">Admin</Option>
-                <Option value="Customer">Customer</Option>
-              </Select>
+              <Input />
             </Form.Item>
+            <Form.Item
+              name="address"
+              label="Address"
+            >
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item
+              name="city"
+              label="City"
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="state"
+              label="State"
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="pincode"
+              label="Pincode"
+            >
+              <Input />
+            </Form.Item>
+           
+          
             <Form.Item
               name="status"
               label="Status"

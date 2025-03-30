@@ -9,7 +9,7 @@ const users = [
     email: "admin@example.com",
     password: bcrypt.hashSync("admin123", 10),
     role: "admin",
-    phone: "+91 9876543210",
+    phone: "+91 9876543210", 
     address: "123 Admin St, Mumbai, Maharashtra, 400001",
     status: "active",
     createdAt: "2023-01-01T00:00:00.000Z",

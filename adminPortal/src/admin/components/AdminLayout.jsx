@@ -60,12 +60,12 @@ const AdminLayout = ({ children }) => {
       label: "Products",
       onClick: () => handleMenuClick("/admin/products"),
     },
-    {
-      key: "inventory",
-      icon: <InboxOutlined />,
-      label: "Inventory",
-      onClick: () => handleMenuClick("/admin/inventory"),
-    },
+    // {
+    //   key: "inventory",
+    //   icon: <InboxOutlined />,
+    //   label: "Inventory",
+    //   onClick: () => handleMenuClick("/admin/inventory"),
+    // },
     {
       key: "orders",
       icon: <ShoppingCartOutlined />,
