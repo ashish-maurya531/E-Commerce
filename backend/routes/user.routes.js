@@ -12,6 +12,10 @@ router.delete("/:id", verifyToken, isAdmin, userController.deleteUser)
 
 
 router.post("/",userController.createUser)
+///send otp 
+router.post("/send-otp", userController.sendOtp)
+///verify otp
+router.post("/verify-otp", userController.verifyOtp)
 
 router.get("/getUser",userController.getUserById)
 

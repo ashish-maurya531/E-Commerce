@@ -98,6 +98,11 @@ const productController = {
       `;
   
       const [result] = await db.query(query, values);
+      //update the count of products in category
+      await db.query(
+        `UPDATE categories SET category_products_count = category_products_count + 1 WHERE category_id =?`
+      ,[req.body.category_id]);
+      console.log('Product created:', result);
   
       res.status(201).json({ 
         message: "Product created successfully", 

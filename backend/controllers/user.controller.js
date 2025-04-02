@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs")
 const { users } = require("../data/users")
 const db = require("../config/database")
 const { v4: uuidv4 } = require('uuid')
+const { sendOTP, verifyOTP } = require('../utils/sendOtpMail');
 //jwt
 const jwt = require('jsonwebtoken')
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../utils/jwt.utils")
@@ -50,7 +51,7 @@ const userController = {
     try {
       const { 
         firstname, lastname, email, password, 
-        phoneno, address, city, state, pincode
+        phoneno, address, city, state, pincode,otp
       } = req.body
 
       // Check if user already exists
@@ -62,6 +63,12 @@ const userController = {
       if (existingUser.length) {
         return res.status(400).json({ message: "User already exists" })
       }
+      // Validate OTP
+      const result = await verifyOTP(email,otp);
+      if (!result) {
+        return res.status(400).json({ message: "Invalid OTP" })
+      }
+      
 
       // Generate unique user ID
       const userId = `UHI-${uuidv4().substring(0, 8)}`
@@ -85,6 +92,46 @@ const userController = {
       res.status(500).json({ message: "Server error", error: error.message })
     }
   },
+///////////////////
+sendOtp:async function(req, res) {
+  try {
+    const email = req.body.email;
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+   const send=await sendOTP(email, 'registration');
+   if(send){
+    res.status(200).json({ message: 'OTP sent successfully' });
+   }else{
+    res.status(400).json({ message: 'OTP sent failed' });
+   }
+} catch (error) {
+    console.error('Failed to send OTP:', error);
+}},
+
+  verifyOtp: async (req, res) => {
+    try {
+      const { email, otp } = req.body;
+      const result = await verifyOTP(email,otp);
+      if (result.valid) {
+          // OTP is valid
+          console.log(result.message);
+          res.status(200).json({ message: 'OTP verified successfully' });
+      } else {
+          // Invalid or expired OTP
+          console.log(result.message);
+          res.status(400).json({ message: 'Invalid OTP' });
+       
+      }
+  } catch (error) {
+      console.error('Failed to verify OTP:', error);
+  }
+  },
+
+ 
+
+
+  /////////////////
 
   // Update user
   updateUser: async (req, res) => {
