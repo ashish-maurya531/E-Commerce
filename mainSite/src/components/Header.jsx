@@ -8,7 +8,7 @@ import "../styles/AppHeader.css"; // Import CSS file
 const { Header } = Layout;
 
 const AppHeader = () => {
-  const isAuthenticated = !!localStorage.getItem("authToken");
+  const isAuthenticated = !!(localStorage.getItem("accessToken") || localStorage.getItem("refreshToken"))
   const [showDropdown, setShowDropdown] = useState(false);
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
@@ -28,7 +28,8 @@ const AppHeader = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     navigate("/auth");
   };
 

@@ -32,12 +32,12 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/category/:categoryName" element={<ProductsPage />} />
           <Route path="/store-locator" element={<StoreLocatorPage />} />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
           {/* Protected Routes */}
-          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
           <Route path="/track-order" element={<ProtectedRoute><TrackOrderPage /></ProtectedRoute>} />

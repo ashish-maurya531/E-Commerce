@@ -35,14 +35,14 @@ body {
 /* Header styles */
 .auth-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 
 .auth-header h1 {
   font-size: 28px;
   font-weight: 700;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .auth-header p {
@@ -53,7 +53,7 @@ body {
 /* Form toggle buttons */
 .form-toggle {
   display: flex;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #eaeaea;
@@ -78,11 +78,11 @@ body {
 
 /* Form styles */
 .auth-form {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .form-group label {
@@ -188,7 +188,8 @@ body {
 .otp-container {
   display: flex;
   justify-content: space-between;
-  margin: 30px 0;
+  margin-top: 30px 0;
+  margin-bottom: 5px;
 }
 
 .otp-input {
@@ -277,5 +278,26 @@ body {
     font-size: 18px;
     margin: 0 2px;
   }
+}
+.otp-btn {
+  cursor: pointer;
+  float: right; /* Align to the right */
+  margin-bottom: 10px;
+  background: none;
+  border: none;
+  color: #18B3E8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.otp-btn:disabled {
+  color: #a0a0a0; /* Greyed out when disabled */
+  cursor: not-allowed;
+}
+
+.otp-btn:hover:not(:disabled) {
+  color: #82C937;
+  text-decoration: underline; /* Darker blue on hover */
 }
 
