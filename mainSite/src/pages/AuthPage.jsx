@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import "../styles/auth-styles.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+
+
+
+const Src = import.meta.env.VITE_Src;
+
 export default function AuthPage() {
   const navigate = useNavigate();
 
@@ -40,7 +46,7 @@ export default function AuthPage() {
     console.log("Handle Login Data:", formData);
     try {
       const response = await axios.post(
-        "https://gk4rbn12-6000.inc1.devtunnels.ms/api/users/user-login",
+        `${Src}/api/users/user-login`,
         {
           email : formData.loginIdentifier,
           password : formData.password,
@@ -124,7 +130,7 @@ export default function AuthPage() {
   const sendOTP = async () => {
     try {
       await axios.post(
-        'https://gk4rbn12-6000.inc1.devtunnels.ms/api/users/send-otp',
+        `${Src}/api/users/send-otp`,
         {
           email: formData.email,
         },

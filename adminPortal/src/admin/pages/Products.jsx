@@ -80,23 +80,25 @@ const Products = () => {
 
   const handleEdit = (record) => {
     try {
-      console.log('Editing product:', record)
-      setEditingProduct(record)
+      console.log('Editing product:', record);
+      setEditingProduct(record);
       
       // Safely parse JSON strings or use empty arrays as fallback
       const parseJsonSafely = (jsonString) => {
         try {
-          return jsonString ? JSON.parse(jsonString) : []
+          if (!jsonString) return [];
+          return typeof jsonString === 'string' ? JSON.parse(jsonString) : 
+                 Array.isArray(jsonString) ? jsonString : [];
         } catch (error) {
-          console.warn('Error parsing JSON:', error)
-          return []
+          console.warn('Error parsing JSON:', error);
+          return [];
         }
-      }
+      };
   
       // Parse all array fields
-      const benefits = parseJsonSafely(record.benefits)
-      const features = parseJsonSafely(record.features)
-      const specifications = parseJsonSafely(record.specifications)
+      const benefits = parseJsonSafely(record.benefits);
+      const features = parseJsonSafely(record.features);
+      const specifications = parseJsonSafely(record.specifications);
   
       // Set all form fields with proper defaults
       const formData = {
@@ -122,34 +124,49 @@ const Products = () => {
         status: record.status || 'Active',
         original_price: record.original_price || 0,
         discount_percentage: record.discount_percentage || 0
-      }
+      };
   
+      console.log('Setting form data:', formData);
+      
       // Reset form and set values
-      form.resetFields()
-      form.setFieldsValue(formData)
+      form.resetFields();
       
-      // Handle images
-      if (record.images) {
-        const imageList = Array.isArray(record.images) ? record.images : [record.images]
-        setFileList(
-          imageList.map((url, index) => ({
-            uid: `-${index}`,
-            name: `image-${index}.jpg`,
-            status: 'done',
-            url: url
-          }))
-        )
-      } else {
-        setFileList([])
-      }
+      // Make sure the form is reset before setting values
+      setTimeout(() => {
+        form.setFieldsValue(formData);
+        
+        // Handle images
+        if (record.images) {
+          try {
+            const imageList = typeof record.images === 'string' 
+              ? JSON.parse(record.images) 
+              : Array.isArray(record.images) 
+                ? record.images 
+                : [];
+                
+            setFileList(
+              imageList.map((url, index) => ({
+                uid: `-${index}`,
+                name: `image-${index}.jpg`,
+                status: 'done',
+                url: url.startsWith('http') ? url : `http://localhost:9000${url}`
+              }))
+            );
+          } catch (error) {
+            console.error('Error parsing images:', error);
+            setFileList([]);
+          }
+        } else {
+          setFileList([]);
+        }
+      }, 100);
       
-      setIsModalVisible(true)
+      setIsModalVisible(true);
     } catch (error) {
-      console.error('Error in handleEdit:', error)
-      message.error('Failed to open edit modal')
+      console.error('Error in handleEdit:', error);
+      message.error('Failed to open edit modal');
     }
-  }
-
+  };
   const formItems = [
     {
       name: 'name',
@@ -344,8 +361,8 @@ const Products = () => {
 
   const handleSubmit = async (values) => {
     try {
-      setLoading(true)
-      const formData = new FormData()
+      setLoading(true);
+      const formData = new FormData();
       
       // Ensure all required fields are included with default values
       const requiredFields = {
@@ -360,15 +377,27 @@ const Products = () => {
         min_stock: values.min_stock || 10,
         size: values.size || '',
         status: values.status || 'Active', // Default to 'Active' if undefined
-        benefits: JSON.stringify(values.benefits || []), // Ensure benefits is never null
-        features: JSON.stringify(values.features || []), // Ensure features is never null
-        specifications: JSON.stringify(values.specifications || []) // Ensure specifications is never null
-      }
+      };
   
       // Add all required fields to formData
       Object.keys(requiredFields).forEach(key => {
-        formData.append(key, requiredFields[key])
-      })
+        formData.append(key, requiredFields[key]);
+      });
+  
+      // Handle JSON fields properly - stringify them without escaping
+      // This is where the fix is applied
+      const jsonFields = {
+        benefits: values.benefits || [],
+        features: values.features || [],
+        specifications: values.specifications || []
+      };
+  
+      // Add JSON fields to formData with proper formatting
+      Object.keys(jsonFields).forEach(key => {
+        // Create a properly formatted JSON string without escaped quotes
+        const jsonValue = JSON.stringify(jsonFields[key]);
+        formData.append(key, jsonValue);
+      });
   
       // Add optional fields if they exist
       const optionalFields = {
@@ -380,39 +409,44 @@ const Products = () => {
         dosage_hi: values.dosage_hi || '',
         original_price: values.original_price || 0,
         discount_percentage: values.discount_percentage || 0
-      }
+      };
   
       // Add optional fields to formData
       Object.keys(optionalFields).forEach(key => {
-        formData.append(key, optionalFields[key])
-      })
+        formData.append(key, optionalFields[key]);
+      });
   
       // Add images
       fileList.forEach(file => {
         if (file.originFileObj) {
-          formData.append('images', file.originFileObj)
+          formData.append('images', file.originFileObj);
         }
-      })
+      });
   
-      if (editingProduct) {
-        await productService.updateProduct(editingProduct.product_id, formData)
-        message.success('Product updated successfully')
-      } else {
-        await productService.createProduct(formData)
-        message.success('Product created successfully')
+      // Log the data being sent (for debugging)
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
       }
   
-      setIsModalVisible(false)
-      form.resetFields()
-      setFileList([])
-      fetchProducts()
+      if (editingProduct) {
+        await productService.updateProduct(editingProduct.product_id, formData);
+        message.success('Product updated successfully');
+      } else {
+        await productService.createProduct(formData);
+        message.success('Product created successfully');
+      }
+  
+      setIsModalVisible(false);
+      form.resetFields();
+      setFileList([]);
+      fetchProducts();
     } catch (error) {
-      console.error('Operation failed:', error)
-      message.error('Operation failed: ' + (error.response?.data?.message || error.message))
+      console.error('Operation failed:', error);
+      message.error('Operation failed: ' + (error.response?.data?.message || error.message));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
     try {

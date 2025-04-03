@@ -85,7 +85,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Use image routes
 // Add this line with your other routes
 app.use('/images', imageRoutes);
-
+ 
 // Routes
 app.use("/api/auth", authRoutes)
 app.use("/api/products", upload.array('images', 5), productRoutes)
