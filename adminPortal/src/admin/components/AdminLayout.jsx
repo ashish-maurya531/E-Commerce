@@ -181,16 +181,17 @@ const AdminLayout = ({ children }) => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" style={{ padding: 16, textAlign: "center" }}>
-          <img src={logo} alt="Logo" style={{ height: 32 }} />
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectedKeys={[location.pathname.split("/").pop()]}
-          items={menuItems}
-        />
-      </Sider>
+  <div className="logo" style={{ padding: 16, textAlign: "center", color: "white", fontSize: 18 }}>
+    {collapsed ? "UHI" : <img src={logo} alt="Logo" style={{ height: 32 }} />}
+  </div>
+  <Menu
+    theme="dark"
+    mode="inline"
+    selectedKeys={[location.pathname.split("/").pop()]}
+    items={menuItems}
+  />
+</Sider>
+
       
       <Layout style={{ marginLeft: collapsed ? 0 :0, transition: "all 0.2s" }}>
         <Header

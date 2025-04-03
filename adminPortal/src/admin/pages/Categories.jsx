@@ -130,7 +130,7 @@ const Categories = () => {
       render: (image_url) => (
         image_url ? (
           <Image 
-            src={`http://localhost:5000${image_url}`}
+            src={`http://localhost:9000${image_url}`}
             alt="Category" 
             width={50} 
             height={50}

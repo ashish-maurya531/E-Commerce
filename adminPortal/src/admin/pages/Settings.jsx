@@ -41,8 +41,8 @@ const Settings = () => {
                 layout="vertical"
                 onFinish={handleSubmit}
                 initialValues={{
-                  storeName: "AdilQadri",
-                  email: "support@adilqadri.com",
+                  storeName: "Unique Herbal Store",
+                  email: "support@uhi.com",
                   phone: "+91 9876543210",
                   currency: "INR",
                 }}
