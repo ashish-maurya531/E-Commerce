@@ -364,7 +364,7 @@ const Products = () => {
       setLoading(true);
       const formData = new FormData();
       
-      // Ensure all required fields are included with default values
+      // Ensure all required fields are included with default value
       const requiredFields = {
         name: values.name,
         category_id: values.category_id,
