@@ -4,6 +4,7 @@ import { Layout, Menu, Space } from "antd";
 import { ShoppingCartOutlined, UserOutlined, SearchOutlined, LogoutOutlined } from "@ant-design/icons";
 import CartDrawer from "./CartDrawer";
 import "../styles/AppHeader.css"; // Import CSS file
+import axios from "axios";
 
 const { Header } = Layout;
 
@@ -27,10 +28,27 @@ const AppHeader = () => {
     return () => window.removeEventListener("storage", updateCartCount);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    navigate("/auth");
+  const handleLogout = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    try {
+      await axios.post(
+        'https://gk4rbn12-6000.inc1.devtunnels.ms/api/users/user-logout',
+        {
+          refreshToken: refreshToken,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      navigate("/auth");
+      console.log("Logout successful");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   useEffect(() => {
