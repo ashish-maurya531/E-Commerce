@@ -105,8 +105,8 @@ export default function AuthPage() {
       } else {
         // Handle OTP-based signup
         setTempFormData({ ...formData });
-        console.log("OTP sent to", formData.phone);
-        alert(`OTP sent to ${formData.phone}. For demo, use 123456.`);
+        sendOTP();
+        setIsOTPSent(true);
       }
     }
   };
@@ -121,10 +121,26 @@ export default function AuthPage() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const sendOTP = () => {
-    alert(`OTP sent to ${formData.phone}. For demo, use 123456.`);
-    setIsOTPSent(true);
-    setTimer(60); // Start 60s countdown
+  const sendOTP = async () => {
+    try {
+      await axios.post(
+        'https://gk4rbn12-6000.inc1.devtunnels.ms/api/users/send-otp',
+        {
+          email: formData.email,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      setIsOTPSent(true);
+      setTimer(60); // Start 60s countdown
+      console.log("OTP sent successfully");
+    } catch (error) {
+      console.error("Failed to send OTP", error);
+    }
   };
   return (
     <div className="auth-container">
