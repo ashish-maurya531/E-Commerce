@@ -158,14 +158,46 @@ const productController = {
   deleteProduct: async (req, res) => {
     try {
       const { id } = req.params;
-      const [result] = await db.query('DELETE FROM products WHERE product_id = ?', [id]);
-
-      if (result.affectedRows === 0) {
+      
+      // First, get the category ID of the product to be deleted
+      const [product] = await db.query(
+        'SELECT category_id FROM products WHERE product_id = ?', 
+        [id]
+      );
+      
+      if (!product.length) {
         return res.status(404).json({ message: "Product not found" });
       }
-
+      
+      const categoryId = product[0].category_id;
+      
+      // Begin transaction
+      await db.query('START TRANSACTION');
+      
+      // Delete the product
+      const [result] = await db.query(
+        'DELETE FROM products WHERE product_id = ?', 
+        [id]
+      );
+      
+      if (result.affectedRows === 0) {
+        await db.query('ROLLBACK');
+        return res.status(404).json({ message: "Product not found" });
+      }
+      
+      // Decrement the product count in the category
+      await db.query(
+        'UPDATE categories SET category_products_count = category_products_count - 1 WHERE category_id = ? AND category_products_count > 0',
+        [categoryId]
+      );
+      
+      // Commit the transaction
+      await db.query('COMMIT');
+      
       res.json({ message: "Product deleted successfully" });
     } catch (error) {
+      // Rollback in case of error
+      await db.query('ROLLBACK');
       console.error('Delete product error:', error);
       res.status(500).json({ 
         message: "Error deleting product", 
