@@ -1400,8 +1400,7 @@ const HomePage = () => {
                   <Rate disabled defaultValue={5} />
                 </div>
                 <Text style={{ display: "block", marginBottom: "15px" }}>
-                  "The Royal Attar Perfume is absolutely amazing! The fragrance
-                  lasts all day and I've received so many compliments."
+                  "The Acai Berry is absolutely amazing! It keeps me active the whole day."
                 </Text>
                 <div style={{ textAlign: "right" }}>
                   <Text strong>- Rahul S.</Text>

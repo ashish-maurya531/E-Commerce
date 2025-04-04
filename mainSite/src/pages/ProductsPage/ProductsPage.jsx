@@ -6,7 +6,9 @@ import FilterSidebar from "./FilterSidebar"
 import "../../styles/ProductsPage.css"
 import Header from "../../components/Header"
 import Footer from "../../components/Footer"
-
+import { use } from "react";
+import axios from "axios"
+const Src = import.meta.env.VITE_Src;
 function ProductsPage() {
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
@@ -17,197 +19,93 @@ function ProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState("all")
   const { categoryName } = useParams();
   const placeholderImage = "https://picsum.photos/300/300";
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Super Health",
-      price: 499,
-      image: placeholderImage,
-      category: "General Health & Wellness",
-    },
-    {
-      id: 2,
-      name: "Liver Care",
-      price: 599,
-      image: placeholderImage,
-      category: "Liver & Kidney Health",
-    },
-    {
-      id: 3,
-      name: "Total Health",
-      price: 699,
-      image: placeholderImage,
-      category: "General Health & Wellness",
-    },
-    {
-      id: 4,
-      name: "Acai Berry",
-      price: 799,
-      image: placeholderImage,
-      category: "Immunity & Respiratory Health",
-    },
-    {
-      id: 5,
-      name: "Cough Syrup",
-      price: 299,
-      image: placeholderImage,
-      category: "Immunity & Respiratory Health",
-    },
-    {
-      id: 6,
-      name: "Piles Care",
-      price: 549,
-      image: placeholderImage,
-      category: "Digestive & Gut Health",
-    },
-    {
-      id: 7,
-      name: "Ortho Care",
-      price: 699,
-      image: placeholderImage,
-      category: "Joint & Bone Health",
-    },
-    {
-      id: 8,
-      name: "Bhringraj Hair Oil",
-      price: 399,
-      image: placeholderImage,
-      category: "Skin & Hair Care",
-    },
-    {
-      id: 9,
-      name: "Aloe Vera Shampoo",
-      price: 499,
-      image: placeholderImage,
-      category: "Skin & Hair Care",
-    },
-    {
-      id: 10,
-      name: "Aloe Vera Face Wash",
-      price: 349,
-      image: placeholderImage,
-      category: "Skin & Hair Care",
-    },
-    {
-      id: 11,
-      name: "Kidney Care",
-      price: 599,
-      image: placeholderImage,
-      category: "Liver & Kidney Health",
-    },
-    {
-      id: 12,
-      name: "Lady Care",
-      price: 649,
-      image: placeholderImage,
-      category: "Women's Health",
-    },
-    {
-      id: 13,
-      name: "Blood Purifier",
-      price: 499,
-      image: placeholderImage,
-      category: "Skin & Hair Care",
-    },
-    {
-      id: 14,
-      name: "Cyst Care",
-      price: 749,
-      image: placeholderImage,
-      category: "Women's Health",
-    },
-    {
-      id: 15,
-      name: "Digestive Care Tablets",
-      price: 399,
-      image: placeholderImage,
-      category: "Digestive & Gut Health",
-    },
-    {
-      id: 16,
-      name: "Charam Rog Nashak Malham",
-      price: 599,
-      image: placeholderImage,
-      category: "Skin & Hair Care",
-    },
-    {
-      id: 17,
-      name: "Stamina",
-      price: 799,
-      image: placeholderImage,
-      category: "Men's Health",
-    },
-    {
-      id: 18,
-      name: "Eye Drop",
-      price: 299,
-      image: placeholderImage,
-      category: "Eye & Vision Care",
-    },
-    {
-      id: 19,
-      name: "Sugar Control",
-      price: 649,
-      image: placeholderImage,
-      category: "General Health & Wellness",
-    },
-    {
-      id: 20,
-      name: "Man Care",
-      price: 749,
-      image: placeholderImage,
-      category: "Men's Health",
-    },
-    {
-      id: 21,
-      name: "Young Tarang",
-      price: 849,
-      image: placeholderImage,
-      category: "Men's Health",
-    },
-    {
-      id: 22,
-      name: "Digestive Care Powder",
-      price: 449,
-      image: placeholderImage,
-      category: "Digestive & Gut Health",
-    }
-];
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${Src}/api/categories/`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${Src}/api/products`);
+        const allProducts = response.data;
+  
+        // filter by category from URL params
+        const filtered = allProducts.filter((product) =>
+          product.category_id.toLowerCase() === categoryName.toLowerCase()
+        );
+  
+        // Map to frontend-friendly structure
+        const mappedProducts = filtered.map((product) => ({
+          id: product.product_id,
+          name: product.name,
+          price: product.price,
+          originalPrice: Math.round(product.price * 1.5),
+          discount: `${Math.round((1 - product.price / (product.price * 1.5)) * 100)}% off`,
+          image: `${Src}${product.images[0]}` || placeholderImage,
+          rating: parseFloat(product.rating || (Math.random() * 1.5 + 4).toFixed(1)),
+          reviews: Math.floor(Math.random() * 200) + 50,
+          category: product.category_id.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-"),
+          isNew: Math.random() > 0.5
+        }));
+  
+        setFeaturedProducts(filtered); // if needed
+        setProducts(mappedProducts);
+        setFilteredProducts(mappedProducts);
+      } catch (error) {
+        console.error("Error fetching and processing products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchProducts();
+  }, [categoryName]);
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   // Fetch products (simulated)
-  useEffect(() => {
-    const filteredProducts = featuredProducts.filter(
-      (product) =>
-        product.category.toLowerCase() === categoryName.toLowerCase()
-    );
-    // In a real app, you would fetch from an API
-    const fetchProducts = async () => {
-      setLoading(true)
-      try {
-        const data = filteredProducts.map((product, index) => ({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          originalPrice: Math.round(product.price * 1.5), // Assuming a 50% markup for original price
-          discount: `${Math.round((1 - product.price / (product.price * 1.5)) * 100)}% off`,
-          image: product.image,
-          rating: (Math.random() * 1.5 + 4).toFixed(1), // Generating random ratings between 4.0 and 5.5
-          reviews: Math.floor(Math.random() * 200) + 50, // Generating random reviews between 50 and 250
-          category: product.category.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-"),
-          isNew: Math.random() > 0.5, // Randomly marking some products as new
-        }));
-        setProducts(data)
-        setFilteredProducts(data)
-      } catch (error) {
-        console.error("Error fetching products:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProducts()
-  }, [])
+  // useEffect(() => {
+  //   const filteredProducts = featuredProducts.filter(
+  //     (product) =>
+  //       product.category_id.toLowerCase() === categoryName.toLowerCase()
+  //   );
+  //   // In a real app, you would fetch from an API
+  //   const fetchProducts = async () => {
+  //     setLoading(true)
+  //     try {
+  //       const data = filteredProducts.map((product, index) => ({
+  //         id: product.product_id,
+  //         name: product.name,
+  //         price: product.price,
+  //         originalPrice: Math.round(product.price * 1.5), // Assuming a 50% markup for original price
+  //         discount: `${Math.round((1 - product.price / (product.price * 1.5)) * 100)}% off`,
+  //         image: product.image,
+  //         rating: (Math.random() * 1.5 + 4).toFixed(1), // Generating random ratings between 4.0 and 5.5
+  //         reviews: Math.floor(Math.random() * 200) + 50, // Generating random reviews between 50 and 250
+  //         category: product.category_id.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-"),
+  //         isNew: Math.random() > 0.5, // Randomly marking some products as new
+  //       }));
+  //       setProducts(data)
+  //       setFilteredProducts(data)
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error)
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchProducts()
+  // }, [])
 
   // Filter and sort products
   useEffect(() => {
