@@ -338,6 +338,7 @@ import Footer from "../components/Footer"
 import FeatureSection from "../components/Featuresection.jsx"
 import "../styles/ProductDetailPage.css"
 import axios from "axios"
+const Src = import.meta.env.VITE_Src;
 
 // Reusable function to render stars
 const renderStars = (rating) => {
@@ -369,7 +370,7 @@ const ProductDetailPage = () => {
     const fetchProductDetails = async () => {
       try {
         setLoading(true)
-        const response = await axios.get(`http://localhost:9000/api/products/${productId}`)
+        const response = await axios.get(`${Src}/api/products/${productId}`)
         setProduct(response.data)
         setLoading(false)
       } catch (err) {
@@ -487,7 +488,7 @@ const ProductDetailPage = () => {
             <div className="main-image">
               <img 
                 src={product.images && product.images.length > 0 
-                  ? `http://localhost:9000${product.images[mainImage]}` 
+                  ? `${Src}${product.images[mainImage]}` 
                   : "https://picsum.photos/600/600"} 
                 alt={product.name} 
               />
@@ -500,7 +501,7 @@ const ProductDetailPage = () => {
                   onClick={() => setMainImage(index)}
                 >
                   <img 
-                    src={`http://localhost:9000${image}`} 
+                    src={`${Src}${image}`} 
                     alt={`${product.name} - View ${index + 1}`} 
                   />
                 </div>
@@ -806,7 +807,7 @@ const RelatedProducts = ({ relatedProducts, navigate }) => {
       try {
         // Create an array of promises for each product fetch
         const productPromises = relatedProducts.map(product => 
-          axios.get(`http://localhost:9000/api/products/${product.product_id}`)
+          axios.get(`${Src}/api/products/${product.product_id}`)
         )
         
         // Wait for all promises to resolve
@@ -851,7 +852,7 @@ const RelatedProducts = ({ relatedProducts, navigate }) => {
               originalPrice: product.original_price,
               rating: product.rating,
               image: product.images && product.images.length > 0 
-                ? `http://localhost:9000${product.images[0]}` 
+                ? `${Src}${product.images[0]}` 
                 : "https://picsum.photos/300/300"
             }} 
             onClick={() => navigate(`/product/${product.product_id}`)}
