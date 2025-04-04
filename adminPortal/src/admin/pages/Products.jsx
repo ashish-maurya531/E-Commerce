@@ -393,15 +393,15 @@ const Products = () => {
       };
   
       // Add JSON fields to formData with proper formatting
-      // Object.keys(jsonFields).forEach(key => {
-      //   // Create a properly formatted JSON string without escaped quotes
-      //   const jsonValue = JSON.stringify(jsonFields[key]);
-      //   formData.append(key, jsonValue);
-      // });
-
-      Object.entries(jsonFields).forEach(([key, value]) => {
-        formData.append(key,value);
+      Object.keys(jsonFields).forEach(key => {
+        // Create a properly formatted JSON string without escaped quotes
+        const jsonValue = JSON.stringify(jsonFields[key]);
+        formData.append(key, jsonValue);
       });
+
+      // Object.entries(jsonFields).forEach(([key, value]) => {
+      //   formData.append(key,value);
+      // });
   
       // Add optional fields if they exist
       const optionalFields = {
