@@ -53,6 +53,7 @@ const userController = {
         firstname, lastname, email, password, 
         phoneno, address, city, state, pincode,otp
       } = req.body
+      console.log(req.body)
 
       // Check if user already exists
       const [existingUser] = await db.query(
