@@ -238,7 +238,8 @@ sendOtp:async function(req, res) {
              refresh_token = VALUES(refresh_token),
              updated_at = NOW()`,
         [user[0].id, refreshToken]
-      )
+      );
+      
   
       res.json({
         message: "Login successful",
