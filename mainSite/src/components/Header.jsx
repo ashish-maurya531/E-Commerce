@@ -20,8 +20,10 @@ const AppHeader = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${Src}/api/categories/`);
-        const filtered = response.data.filter(cat => cat.products_count > 0);
-        setCategories(filtered);
+        const filtered = response.data.filter(cat => cat.products_count >= 0);
+        // i want to filter first four categories
+        const finalFiltered = filtered.slice(0, 4);
+        setCategories(finalFiltered);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
