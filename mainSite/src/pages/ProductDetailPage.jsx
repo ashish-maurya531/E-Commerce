@@ -465,10 +465,10 @@ const ProductDetailPage = () => {
   const discountPercentage = product.discount_percentage ? parseFloat(product.discount_percentage) : 
     (product.original_price && product.price ? Math.round(((parseFloat(product.original_price) - parseFloat(product.price)) / parseFloat(product.original_price)) * 100) : 0)
 
-  const productReviews = product.reviews || []
-  const productFeatures = product.features || []
-  const productSpecifications = product.specifications || []
-  const relatedProducts = product.related_products || []
+  const productReviews = product?.reviews || []
+  const productFeatures = product?.features || []
+  const productSpecifications = product?.specifications || []
+  const relatedProducts = product?.related_products || []
 
   return (
     <div>

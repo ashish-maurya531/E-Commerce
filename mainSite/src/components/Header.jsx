@@ -32,7 +32,7 @@ const AppHeader = () => {
     const refreshToken = localStorage.getItem("refreshToken");
     try {
       await axios.post(
-        'https://gk4rbn12-6000.inc1.devtunnels.ms/api/users/user-logout',
+        'https://gk4rbn12-9000.inc1.devtunnels.ms/api/users/user-logout',
         {
           refreshToken: refreshToken,
         },
