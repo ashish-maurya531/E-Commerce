@@ -24,16 +24,9 @@ const CheckoutPage = () => {
   const cartItems = [
     {
       id: 1,
-      name: "Royal Attar Perfume",
+      name: "Aloe Vera Gel",
       price: 899,
       quantity: 2,
-      image: "/placeholder.svg?height=80&width=80",
-    },
-    {
-      id: 3,
-      name: "Rose Perfume Spray",
-      price: 799,
-      quantity: 1,
       image: "/placeholder.svg?height=80&width=80",
     },
   ]
