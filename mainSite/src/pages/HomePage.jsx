@@ -814,7 +814,7 @@ const HomePage = () => {
       const products = response.data;
       
       // Process products for featured section (first 4 products)
-      const featuredProducts = products.slice(8,16).map(product => ({
+      const featuredProducts = products.slice(4, 8).map(product => ({
         id: product.product_id,
         name: product.name,
         price: parseFloat(product.price),

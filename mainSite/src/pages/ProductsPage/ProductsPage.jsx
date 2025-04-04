@@ -69,7 +69,7 @@ function ProductsPage() {
     };
   
     fetchProducts();
-  }, [categoryName]);
+  }, []);
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -172,7 +172,7 @@ function ProductsPage() {
       <Header />
       {/* Page Header */}
       <div className="page-header">
-        <h1>{categoryName ? categoryName.replace("-", " ") : "All Products"}</h1>
+        <h1>{categories.name ? categories.name.replace("-", " ") : "All Products"}</h1>
       </div>
 
       {/* Main Content */}
