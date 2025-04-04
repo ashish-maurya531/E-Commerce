@@ -5,7 +5,7 @@ import { ShoppingCartOutlined, UserOutlined, SearchOutlined, LogoutOutlined } fr
 import CartDrawer from "./CartDrawer";
 import "../styles/AppHeader.css"; // Import CSS file
 import axios from "axios";
-
+const Src = import.meta.env.VITE_Src;
 const { Header } = Layout;
 
 const AppHeader = () => {
@@ -15,6 +15,32 @@ const AppHeader = () => {
   const menuRef = useRef();
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${Src}/api/categories/`);
+        const filtered = response.data.filter(cat => cat.products_count > 0);
+        setCategories(filtered);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Utility function to generate a slug from the category name
+  const slugify = (text) =>
+    text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/&/g, "and") // Replace & with 'and'
+      .replace(/[^\w\-]+/g, "") // Remove all non-word characters
+      .replace(/\-\-+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start
+      .replace(/-+$/, ""); // Trim - from end
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -71,37 +97,17 @@ const AppHeader = () => {
         </div>
 
         <Menu mode="horizontal" className="menu">
-          <Menu.Item key="wellness">
-            <Link to="/category/general-wellness">
-              <span className="menu-text">General Wellness</span>
+      {categories.map((category) => {
+        const slug = slugify(category.name);
+        return (
+          <Menu.Item key={category.category_id}>
+            <Link to={`/category/${category.category_id}`} className="menu-link">
+              <span className="menu-text">{category.name}</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="liver-kidney">
-            <Link to="/category/liver-kidney">
-              <span className="menu-text">Liver & Kidney Care</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="immunity">
-            <Link to="/category/immunity-respiratory">
-              <span className="menu-text">Immunity & Respiratory</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="digestive">
-            <Link to="/category/digestive-health">
-              <span className="menu-text">Digestive Health</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="eye">
-            <Link to="/category/eye-care">
-              <span className="menu-text">Eye Care</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="new">
-            <Link to="/category/new-arrival">
-              <span className="menu-text">New Arrivals</span>
-            </Link>
-          </Menu.Item>
-        </Menu>
+        );
+      })}
+    </Menu>
 
         <Space size="large">
           <CartDrawer />
