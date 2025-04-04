@@ -1213,7 +1213,7 @@ const HomePage = () => {
                       cover={
                         <img 
                           alt={category.name} 
-                          src={`http://localhost:9000${category.image_url}`} 
+                          src={`${Src}${category.image_url}`} 
                           style={{ height: 200, objectFit: "cover" }}
                         />
                       }
