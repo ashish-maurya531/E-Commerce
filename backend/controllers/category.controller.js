@@ -224,30 +224,108 @@ const categoryController = {
   },
 
   // Delete category
+  // deleteCategory: async (req, res) => {
+  //   try {
+  //     const { id } = req.params;
+
+  //     // Get category details to find the image
+  //     const [category] = await db.query(
+  //       'SELECT category_image_url FROM categories WHERE category_id = ?',
+  //       [id]
+  //     );
+
+  //     if (!category.length) {
+  //       return res.status(404).json({ message: "Category not found" });
+  //     }
+
+  //     // // Check if category has products
+  //     // const [products] = await db.query(
+  //     //   'SELECT COUNT(*) as count FROM products WHERE category_id = ?', 
+  //     //   [id]
+  //     // );
+      
+  //     // if (products[0].count > 0) {
+  //     //   return res.status(400).json({ message: "Cannot delete category with existing products" });
+  //     // }
+
+  //     // Delete the image file if it exists
+  //     if (category[0].category_image_url) {
+  //       const imagePath = path.join(__dirname, '..', category[0].category_image_url);
+  //       if (fs.existsSync(imagePath)) {
+  //         fs.unlinkSync(imagePath);
+  //       }
+  //     }
+
+  //     // Delete the category from database
+  //     const [result] = await db.query(
+  //       'DELETE FROM categories WHERE category_id = ?',
+  //       [id]
+  //     );
+
+  //     if (result.affectedRows === 0) {
+  //       return res.status(404).json({ message: "Category not found" });
+  //     }
+
+  //     res.json({ message: "Category deleted successfully" });
+  //   } catch (error) {
+  //     console.error('Error deleting category:', error);
+  //     res.status(500).json({ 
+  //       message: "Server error", 
+  //       error: error.message 
+  //     });
+  //   }
+  // }
   deleteCategory: async (req, res) => {
     try {
       const { id } = req.params;
-
+  
       // Get category details to find the image
       const [category] = await db.query(
         'SELECT category_image_url FROM categories WHERE category_id = ?',
         [id]
       );
-
+  
       if (!category.length) {
         return res.status(404).json({ message: "Category not found" });
       }
-
-      // // Check if category has products
-      // const [products] = await db.query(
-      //   'SELECT COUNT(*) as count FROM products WHERE category_id = ?', 
-      //   [id]
-      // );
+  
+      // Find the "General" category ID
+      const [generalCategory] = await db.query(
+        'SELECT category_id FROM categories WHERE category_name = ?',
+        ['General']
+      );
+  
+      if (!generalCategory.length) {
+        return res.status(400).json({ message: "General category not found. Please create it first." });
+      }
+  
+      const generalCategoryId = generalCategory[0].category_id;
+  
+      // Count products in the category being deleted
+      const [productCount] = await db.query(
+        'SELECT COUNT(*) as count FROM products WHERE category_id = ?',
+        [id]
+      );
       
-      // if (products[0].count > 0) {
-      //   return res.status(400).json({ message: "Cannot delete category with existing products" });
-      // }
-
+      const productsToMove = productCount[0].count;
+  
+      // Begin transaction to ensure data consistency
+      await db.query('START TRANSACTION');
+  
+      // Update products that belong to the category being deleted
+      await db.query(
+        'UPDATE products SET category_id = ? WHERE category_id = ?',
+        [generalCategoryId, id]
+      );
+  
+      // Update the product count for the General category
+      if (productsToMove > 0) {
+        await db.query(
+          'UPDATE categories SET category_products_count = category_products_count + ? WHERE category_id = ?',
+          [productsToMove, generalCategoryId]
+        );
+      }
+  
       // Delete the image file if it exists
       if (category[0].category_image_url) {
         const imagePath = path.join(__dirname, '..', category[0].category_image_url);
@@ -255,19 +333,28 @@ const categoryController = {
           fs.unlinkSync(imagePath);
         }
       }
-
+  
       // Delete the category from database
       const [result] = await db.query(
         'DELETE FROM categories WHERE category_id = ?',
         [id]
       );
-
+  
       if (result.affectedRows === 0) {
+        await db.query('ROLLBACK');
         return res.status(404).json({ message: "Category not found" });
       }
-
-      res.json({ message: "Category deleted successfully" });
+  
+      // Commit the transaction
+      await db.query('COMMIT');
+  
+      res.json({ 
+        message: "Category deleted successfully. Any associated products were moved to General category.",
+        productsReassigned: productsToMove
+      });
     } catch (error) {
+      // Rollback in case of error
+      await db.query('ROLLBACK');
       console.error('Error deleting category:', error);
       res.status(500).json({ 
         message: "Server error", 
