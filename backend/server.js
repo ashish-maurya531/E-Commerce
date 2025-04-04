@@ -67,6 +67,12 @@ const app = express()
 
 // Middleware setup
 app.use(cors())
+
+// app.use(cors({
+//   origin: 'http://localhost:5174', // or use '*' for all origins during dev
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   credentials: true // if you are using cookies / auth headers
+// }));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 morgan.token('date', () => {
