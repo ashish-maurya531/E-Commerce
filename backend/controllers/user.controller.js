@@ -3,9 +3,143 @@ const { users } = require("../data/users")
 const db = require("../config/database")
 const { v4: uuidv4 } = require('uuid')
 const { sendOTP, verifyOTP } = require('../utils/sendOtpMail');
+const containsSQLInjectionWords= require('../utils/sqlinjectioncheck');
 //jwt
 const jwt = require('jsonwebtoken')
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../utils/jwt.utils")
+
+// Function to update member hierarchy
+const updateMemberHierarchy = async (newMember, upline) => {
+  try {
+    // Get kro existing hierarchy of the upline
+    const [uplineHierarchy] = await db.query(
+      'SELECT super_upline, upline, level FROM member_hierarchy WHERE member = ?',
+      [upline]
+    );
+
+    
+    await db.query(
+      'INSERT INTO member_hierarchy (super_upline, upline, member, level) VALUES (?, ?, ?, ?)',
+      [upline, upline, newMember, 1]
+    );
+
+    for (const row of uplineHierarchy) {
+      if (row.level < 20) {
+        await db.query(
+          'INSERT INTO member_hierarchy (super_upline, upline, member, level) VALUES (?, ?, ?, ?)',
+          [row.super_upline, upline, newMember, row.level + 1]
+        );
+      }
+    }
+  } catch (error) {
+    console.error('Error updating member hierarchy:', error);
+  }
+};
+// Add a new member
+const addMember= async (newMember,upline) => {
+  // const { newMember, upline } = req.body;
+console.log(newMember, upline);
+  try {
+  
+    const [uplineCheck] = await db.query('SELECT member FROM member_hierarchy WHERE upline = ? or member=? ', [upline,upline]);
+    if (uplineCheck.length === 0) {
+      return ({ error: 'Invalid upline' });
+    }
+
+    await updateMemberHierarchy(newMember, upline);
+
+    return({ message: 'Member added successfully' });
+  } catch (error) {
+    console.error('Error adding member:', error);
+    return({ error: 'Internal server error' });
+  }
+};
+
+
+
+// // Get list of member hierarchy
+// router.post('/getlist',authenticateToken, async (req, res) => {
+//   try {
+//     const [rows] = await db.query('SELECT * FROM member_hierarchy ORDER BY member,level');
+//     res.json(rows);
+//   } catch (error) {
+//     console.error('Error fetching member hierarchy:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
+
+
+
+const checkSponserId = async (id) => {
+  try {
+    // Check if the id is "UP130566" and return false immediately
+    if (id === "UP130566") {
+      return false;
+    }
+
+    // Query to check if the id exists in either sponser_id or member_id
+    const query = `SELECT 1 FROM member WHERE sponser_id = ? OR member_id = ? LIMIT 1`;
+    const [rows] = await db.query(query, [id, id]);
+
+    // If the query returns a row, the id exists
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error checking sponsor ID:', error);
+    throw error; // Re-throw the error for the caller to handle
+  }
+};
+
+// router.post('/checkSponserId', async(req, res) => {
+//   const { sponser_id } = req.body;
+//   //check for sql injection using function imported
+//   if (containsSQLInjectionWords(sponser_id)) {
+//     return res.status(400).json({ error: "Don't try to hack." });
+//   }
+//   console.log("check this  "+sponser_id);
+//   try {
+//     const isSponserIdValid = await checkSponserId(sponser_id);
+//     var sponserName=[{ username: 'Invalid Sponsor Id' }]
+//     if (isSponserIdValid){
+//        [sponserName] = await db.query('SELECT username FROM usersdetails WHERE memberid =?',[sponser_id])
+//     }
+   
+//     console.log("Checking",isSponserIdValid,sponserName[0].username);
+//     res.json({ isValid: isSponserIdValid,
+//       sponserName: sponserName[0].username
+//     });
+//   } catch (error) {
+//     console.error('Error checking sponsor ID:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
+
+///////////////////
+const abc = async (placement_id, sponser_id,userId) => {
+  const connection = await db.getConnection();
+  try {
+    //start connection
+    await connection.beginTransaction();
+    await connection.query(
+      'INSERT INTO member (placement_id,sponser_id, member_id) VALUES (?, ?,?)',
+      [placement_id,sponser_id, userId],
+    );
+    //commit the transaction
+    await connection.commit();
+    console.log("Member added successfully");
+    await addMember(userId, placement_id);
+  }
+  
+
+  catch (error) {
+    console.error('Error in abc:', error);
+    // res.status(500).json({ message: "Server error", error: error.message })
+  }
+  finally {
+    connection.release()
+  }
+}
+// abc("UHI-2222","UHI-2a1b3c","UHI-3333")
+
 
 const userController = {
   // Get all users
@@ -18,6 +152,7 @@ const userController = {
         FROM usersdetails
         ORDER BY createdat DESC
       `)
+      
       res.status(200).json(users)
     } catch (error) {
       res.status(500).json({ message: "Server error", error: error.message })
@@ -40,6 +175,7 @@ const userController = {
         return res.status(404).json({ message: "User not found" })
       }
 
+
       res.status(200).json(user[0])
     } catch (error) {
       res.status(500).json({ message: "Server error", error: error.message })
@@ -51,7 +187,8 @@ const userController = {
     try {
       const { 
         firstname, lastname, email, password, 
-        phoneno, address, city, state, pincode,otp
+        phoneno, address, city, state, pincode,otp,
+        sponser_id, placement_id
       } = req.body
       console.log(req.body)
 
@@ -64,6 +201,36 @@ const userController = {
       if (existingUser.length) {
         return res.status(400).json({ message: "User already exists" })
       }
+
+       //check sponser id 
+      const isSponserIdValid = await checkSponserId(sponser_id);
+      if (!isSponserIdValid) {
+        console.log("sponser id invalid mat bhej ")
+        return res.status(200).json({ status: "false", error: "Invalid sponser ID." });
+      }
+      //chack placement id 
+      const isPlacementIdValid = await checkSponserId(placement_id);
+      if (!isPlacementIdValid) {
+        console.log("placement id invalid mat bhej ")
+        return res.status(200).json({ status: "false", error: "Invalid placement ID." });
+      }
+      // Check for SQL injection
+      if (containsSQLInjectionWords(firstname) ||
+          containsSQLInjectionWords(lastname) ||
+          containsSQLInjectionWords(email) ||
+          containsSQLInjectionWords(password) ||
+          containsSQLInjectionWords(phoneno) ||
+          containsSQLInjectionWords(address) ||
+          containsSQLInjectionWords(city) ||
+          containsSQLInjectionWords(state))
+          // containsSQLInjectionWords(pincode) ||
+          // containsSQLInjectionWords(sponser_id) ||
+          // containsSQLInjectionWords(placement_id))
+           {
+        return res.status(400).json({ error: "Don't try to hack." });
+      }
+      
+      
       // Validate OTP
       const result = await verifyOTP(email,otp);
       if (!result) {
@@ -73,9 +240,19 @@ const userController = {
 
       // Generate unique user ID
       const userId = `UHI-${uuidv4().substring(0, 8)}`
+      
+      //create the connectoon 
+      const connection = await db.getConnection();
+      await connection.beginTransaction();
+      // await connection.query(
+      //   'INSERT INTO member (placement_id,sponser_id, member_id) VALUES (?, ?,?)',
+      //   [placement_id,sponser_id, userId],
+      // );
+      // await addMember(userId, placement_id);
+      await abc(placement_id,sponser_id, userId)
 
       // Create new user
-      await db.query(`
+      const [result1]=await connection.query(`
         INSERT INTO usersdetails (
           id, firstname, lastname, email, password, 
           phoneno, address, city, state, pincode
@@ -84,6 +261,12 @@ const userController = {
         userId, firstname, lastname, email, password,
         phoneno, address, city, state, pincode,
       ])
+      // Check if user was created successfully
+      if (result1.affectedRows === 0) {
+        await connection.rollback();
+        return res.status(500).json({ message: "Failed to create user" })
+      }
+      
 
       res.status(201).json({ 
         message: "User created successfully",
@@ -342,4 +525,5 @@ sendOtp:async function(req, res) {
 }
 
 module.exports = userController
+
 
