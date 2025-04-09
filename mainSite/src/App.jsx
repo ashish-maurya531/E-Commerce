@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useSearchParams } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import HomePage from "./pages/HomePage";
 import CartPage from "./pages/CartPage";
@@ -8,9 +8,12 @@ import ReturnOrderPage from "./pages/ReturnOrderPage";
 import StoreLocatorPage from "./pages/StoreLocatorPage";
 import ProductsPage from "./pages/ProductsPage/ProductsPage";
 import AuthPage from "./pages/AuthPage";
+import DistributorAuth from "./pages/DistributorAuth"; // Import the new page
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import { CartProvider } from "./CartContext.jsx";
+// import { useLoading } from "./LoadingContext";
+// import Loader from "./components/Loader"; // Import the Loader component
 // Custom theme configuration for Ant Design
 const theme = {
   token: {
@@ -23,30 +26,39 @@ const theme = {
     fontFamily: "Poppins, sans-serif",
   },
 };
+// function AuthHandler() {
+//   const [searchParams] = useSearchParams();
+//   const referral = searchParams.get("referral");
+
+//   if (referral) {
+//     return <DistributorAuth />;
+//   }
+//   return <AuthPage />;
+// }
 
 function App() {
   return (
     <ConfigProvider theme={theme}>
       <CartProvider>
-      <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/category/:categoryName" element={<ProductsPage />} />
-          <Route path="/store-locator" element={<StoreLocatorPage />} />
-          <Route path="/product/:productId" element={<ProductDetailPage />} />
-          {/* Protected Routes */}
-          <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
-          <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
-          <Route path="/track-order" element={<ProtectedRoute><TrackOrderPage /></ProtectedRoute>} />
-          <Route path="/return-order" element={<ProtectedRoute><ReturnOrderPage /></ProtectedRoute>} />
+        <Router>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/category/:categoryName" element={<ProductsPage />} />
+            <Route path="/store-locator" element={<StoreLocatorPage />} />
+            <Route path="/product/:productId" element={<ProductDetailPage />} />
+            {/* Protected Routes */}
+            <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+            <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+            <Route path="/track-order" element={<ProtectedRoute><TrackOrderPage /></ProtectedRoute>} />
+            <Route path="/return-order" element={<ProtectedRoute><ReturnOrderPage /></ProtectedRoute>} />
 
-          {/* 404 Route */}
-          <Route path="*" element={<h1 style={{ textAlign: "center", marginTop: "100px" }}>404 Not Found</h1>} />
-        </Routes>
-      </Router>
+            {/* 404 Route */}
+            <Route path="*" element={<h1 style={{ textAlign: "center", marginTop: "100px" }}>404 Not Found</h1>} />
+          </Routes>
+        </Router>
       </CartProvider>
     </ConfigProvider>
   );

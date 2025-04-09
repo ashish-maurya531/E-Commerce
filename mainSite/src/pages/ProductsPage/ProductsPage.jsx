@@ -7,6 +7,7 @@ import "../../styles/ProductsPage.css"
 import Header from "../../components/Header"
 import Footer from "../../components/Footer"
 import { use } from "react";
+import Loader from "../../components/Loader";
 import axios from "axios"
 const Src = import.meta.env.VITE_Src;
 function ProductsPage() {
@@ -17,6 +18,7 @@ function ProductsPage() {
   const [sortBy, setSortBy] = useState("featured")
   const [showFilters, setShowFilters] = useState(false)
   const [categoryFilter, setCategoryFilter] = useState("all")
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const { categoryName } = useParams();
   const placeholderImage = "https://picsum.photos/300/300";
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -24,8 +26,11 @@ function ProductsPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${Src}/api/categories/`);
         setCategories(response.data);
+        const category = response.data.find(cat => cat.category_id === categoryName);
+        setSelectedCategory(category);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -34,7 +39,6 @@ function ProductsPage() {
   }, []);
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
       try {
         const response = await axios.get(`${Src}/api/products`);
         const allProducts = response.data;
@@ -169,10 +173,11 @@ function ProductsPage() {
 
   return (
     <div className="products-page">
+      {loading && <Loader />}
       <Header />
       {/* Page Header */}
       <div className="page-header">
-        <h1>{categories.name ? categories.name.replace("-", " ") : "All Products"}</h1>
+      <h1>{selectedCategory?.name || "All Products"}</h1>
       </div>
 
       {/* Main Content */}
@@ -212,7 +217,7 @@ function ProductsPage() {
           <FilterSidebar
             onClose={toggleFilters}
             onCategoryChange={handleCategoryChange}
-            selectedCategory={categoryFilter}
+            // selectedCategory={categoryFilter}
             onClearFilters={clearFilters}
           />
         )}

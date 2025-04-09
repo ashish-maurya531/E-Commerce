@@ -1,31 +1,62 @@
-"use client"
+"use client";
 
 import { useNavigate } from "react-router-dom";
-import { useState } from "react"
-import "../../styles/ProductCard.css"
+import { useState } from "react";
+import "../../styles/ProductCard.css";
 import { useCart } from "../../CartContext.jsx";
+import { ShoppingCartOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
   const { addToCart } = useCart();
   return (
-    <div className="product-card" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}
-    onClick={() => navigate(`/product/${product.id}`)}>
+    <div
+      className="product-card"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => navigate(`/product/${product.id}`)}
+    >
       {/* Product Image */}
-      <div className="product-image-container">
-        <img
-          src={product.image || "/placeholder.svg"}
-          alt={product.name}
-          className={isHovered ? "product-image zoomed" : "product-image"}
+        <div className="product-image-container">
+          <div className="icon-top-right">
+          <ShareAltOutlined
+          className="share-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            const shareUrl = `${window.location.origin}/product/${product.id}`;
+            const shareData = {
+              title: product.name,
+              text: "Check out this product!",
+              url: shareUrl,
+            };
+
+            if (navigator.share) {
+              navigator
+                .share(shareData)
+                .catch((err) => console.error("Sharing failed:", err));
+            } else {
+              navigator.clipboard.writeText(shareUrl).then(() => {
+                alert("Link copied to clipboard!");
+              });
+            }
+          }}
         />
+          </div>
+          <img
+            src={product.image || "/placeholder.svg"}
+            alt={product.name}
+            className={isHovered ? "product-image zoomed" : "product-image"}
+          />
 
-        {/* New Tag */}
-        {product.isNew && <div className="new-tag">New Arrival</div>}
+          {/* New Tag */}
+          {product.isNew && <div className="new-tag">New Arrival</div>}
 
-        {/* Discount Tag */}
-        {product.discount && <div className="discount-tag">{product.discount}</div>}
-      </div>
+          {/* Discount Tag */}
+          {product.discount && (
+            <div className="discount-tag">{product.discount}</div>
+          )}
+        </div>
 
       {/* Product Info */}
       <div className="product-info">
@@ -42,20 +73,25 @@ function ProductCard({ product }) {
         {/* Price */}
         <div className="product-price">
           <span className="current-price">₹{product.price}</span>
-          {product.originalPrice && <span className="original-price">₹{product.originalPrice}</span>}
+          {product.originalPrice && (
+            <span className="original-price">₹{product.originalPrice}</span>
+          )}
         </div>
 
-        {/* Add to Cart Button */}
-        <button className="add-to-cart-button"
-        onClick={(e) => {
-          e.stopPropagation();
-          addToCart(product);
-        }}
-        >ADD TO CART</button>
+        {/*Buttons*/}
+        <div className="product-buttons">
+          <ShoppingCartOutlined
+            className="add-to-cart-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart(product);
+            }}
+          />
+          <button className="buy-now-button">BUY NOW</button>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ProductCard
-
+export default ProductCard;

@@ -777,7 +777,7 @@ import WhyUs from "../components/WhyUs";
 import { useCart } from "../CartContext.jsx";
 import ProductCard from "./ProductsPage/ProductCard.jsx";
 import Featuresection from "../components/Featuresection.jsx";
-
+import Loader from "../components/Loader.jsx";
 const Src = import.meta.env.VITE_Src;
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -785,7 +785,7 @@ const { Meta } = Card;
 
 const HomePage = () => {
   const { addToCart } = useCart();
-  const [loading, setLoading] = useState(true);
+  const [loading,setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [featureFiltered, setFeatured] = useState([]);
   const [newFiltered, setNew] = useState([]);
@@ -871,6 +871,7 @@ const HomePage = () => {
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#f9f9f0" }}>
+      {loading && <Loader />}
       <Header />
       <Content>
         <Carousel

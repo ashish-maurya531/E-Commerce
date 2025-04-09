@@ -1,16 +1,23 @@
 "use client"
+import { useState, useRef, useEffect } from "react";
 import "../../styles/FilterSidebar.css"
 
 function FilterSidebar({ onClose, onCategoryChange, selectedCategory, onClearFilters }) {
-  const categories = [
-    { id: "all", name: "All Products" },
-    { id: "perfume-spray", name: "Perfume Spray" },
-    { id: "attar", name: "Attar" },
-    { id: "body-spray", name: "Body Spray" },
-    { id: "gift-set", name: "Gift Sets" },
-    { id: "discovery-set", name: "Discovery Sets" },
-  ]
-
+  // const [categories, setCategories] = useState([]);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await axios.get(`${Src}/api/categories/`);
+  //       const filtered = response.data.filter(cat => cat.products_count >= 0);
+  //       // i want to filter first four categories
+  //       const finalFiltered = filtered.slice(0, 4);
+  //       setCategories(finalFiltered);
+  //     } catch (error) {
+  //       console.error("Error fetching categories:", error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
   return (
     <div className="filter-sidebar-overlay">
       <div className="filter-sidebar">
@@ -22,7 +29,7 @@ function FilterSidebar({ onClose, onCategoryChange, selectedCategory, onClearFil
         </div>
 
         <div className="filter-content">
-          <div className="filter-section">
+          {/* <div className="filter-section">
             <h4>Category</h4>
             <div className="category-options">
               {categories.map((category) => (
@@ -38,7 +45,7 @@ function FilterSidebar({ onClose, onCategoryChange, selectedCategory, onClearFil
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="filter-section">
             <h4>Price Range</h4>
