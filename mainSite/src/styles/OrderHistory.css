@@ -1,0 +1,144 @@
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  background-color: var(--background-light);
+  transition: background-color var(--transition-speed);
+}
+
+.order-header:hover {
+  background-color: rgba(74, 108, 247, 0.05);
+}
+
+.order-header-details,
+.order-header-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-id,
+.order-date,
+.order-total {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.status-delivered {
+  background-color: rgba(67, 160, 71, 0.1);
+  color: var(--success-color);
+}
+
+.status-processing {
+  background-color: rgba(251, 140, 0, 0.1);
+  color: var(--warning-color);
+}
+
+.status-cancelled {
+  background-color: rgba(229, 57, 53, 0.1);
+  color: var(--danger-color);
+}
+
+.expand-icon {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.order-details {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  background-color: white;
+}
+
+.order-details h4 {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.order-item-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: var(--background-light);
+  border-radius: 4px;
+}
+
+.item-name {
+  flex: 1;
+}
+
+.item-quantity {
+  color: var(--text-secondary);
+  margin: 0 1rem;
+}
+
+.order-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.view-all-orders {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+@media (min-width: 768px) {
+  .order-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .order-header-details,
+  .order-header-status {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+
+  .order-id,
+  .order-date,
+  .order-total {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .order-details {
+    padding: 1.5rem;
+  }
+}

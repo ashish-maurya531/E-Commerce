@@ -1,0 +1,137 @@
+.footer {
+    background-color: #531c1b;
+    color: white;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .footer-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
+  .footer-section {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .footer-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .footer-contact {
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+  
+  .footer-social {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .footer-link {
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .footer-link:hover {
+    color: #c29358;
+  }
+  
+  .footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-list li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-news-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .footer-newsletter {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .footer-input {
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+  }
+  
+  .footer-button {
+    padding: 10px 15px;
+    background-color: #c29358;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+  }
+  
+  .footer-button:hover {
+    background-color: #b58340;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #774141;
+    padding-top: 15px;
+    font-size: 14px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .footer-developer {
+    color: #b5b5b5;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .footer-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .footer-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .footer-newsletter {
+      flex-direction: column;
+    }
+  
+    .footer-input,
+    .footer-button {
+      width: 100%;
+      border-radius: 4px;
+    }
+  
+    .footer-button {
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+  
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+    }
+  }  

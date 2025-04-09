@@ -12,6 +12,7 @@ import DistributorAuth from "./pages/DistributorAuth"; // Import the new page
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import { CartProvider } from "./CartContext.jsx";
+import UserProfile from "./pages/UserProfile/UserProfile";
 // import { useLoading } from "./LoadingContext";
 // import Loader from "./components/Loader"; // Import the Loader component
 // Custom theme configuration for Ant Design
@@ -54,6 +55,7 @@ function App() {
             <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
             <Route path="/track-order" element={<ProtectedRoute><TrackOrderPage /></ProtectedRoute>} />
             <Route path="/return-order" element={<ProtectedRoute><ReturnOrderPage /></ProtectedRoute>} />
+            <Route path="/user-profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
 
             {/* 404 Route */}
             <Route path="*" element={<h1 style={{ textAlign: "center", marginTop: "100px" }}>404 Not Found</h1>} />
