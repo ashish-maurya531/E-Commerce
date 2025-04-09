@@ -12,6 +12,8 @@ router.delete("/:id", verifyToken, isAdmin, userController.deleteUser)
 
 
 router.post("/",userController.createUser)
+router.post("/distributer_register",userController.createUser_distributer)
+
 ///send otp 
 router.post("/send-otp", userController.sendOtp)
 ///verify otp

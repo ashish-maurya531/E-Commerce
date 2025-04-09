@@ -99,6 +99,7 @@ const Products = () => {
       const benefits = parseJsonSafely(record.benefits);
       const features = parseJsonSafely(record.features);
       const specifications = parseJsonSafely(record.specifications);
+      const related_products = parseJsonSafely(record.related_products);
   
       // Set all form fields with proper defaults
       const formData = {
@@ -112,6 +113,7 @@ const Products = () => {
         benefits: benefits,
         features: features,
         specifications: specifications,
+        related_products: related_products,
         dosage_en: record.dosage_en || '',
         dosage_hi: record.dosage_hi || '',
         mrp: record.mrp || 0,
@@ -147,9 +149,10 @@ const Products = () => {
             setFileList(
               imageList.map((url, index) => ({
                 uid: `-${index}`,
-                name: `image-${index}.jpg`,
+                name: url.split('/').pop(),
                 status: 'done',
-                url: url.startsWith('http') ? url : `http://localhost:9000${url}`
+                url: url.startsWith('http') ? url : `http://localhost:9000${url}`,
+                response: { path: url }
               }))
             );
           } catch (error) {
@@ -359,6 +362,12 @@ const Products = () => {
     }
   ]
 
+  const getExistingImages = () => {
+    return fileList
+      .filter(file => file.response?.path)
+      .map(file => file.response.path);
+  };
+
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
@@ -385,23 +394,20 @@ const Products = () => {
       });
   
       // Handle JSON fields properly - stringify them without escaping
-      // This is where the fix is applied
       const jsonFields = {
         benefits: values.benefits || [],
         features: values.features || [],
-        specifications: values.specifications || []
+        specifications: values.specifications || [],
+        related_products: values.related_products?.map(item => ({
+          product_id: item.product_id,
+          name: products.find(p => p.product_id === item.product_id)?.name || ''
+        })) || []
       };
   
       // Add JSON fields to formData with proper formatting
       Object.keys(jsonFields).forEach(key => {
-        // Create a properly formatted JSON string without escaped quotes
-        const jsonValue = JSON.stringify(jsonFields[key]);
-        formData.append(key, jsonValue);
+        formData.append(key, JSON.stringify(jsonFields[key]));
       });
-
-      // Object.entries(jsonFields).forEach(([key, value]) => {
-      //   formData.append(key,value);
-      // });
   
       // Add optional fields if they exist
       const optionalFields = {
@@ -420,11 +426,16 @@ const Products = () => {
         formData.append(key, optionalFields[key]);
       });
   
-      // Add images
-      fileList.forEach(file => {
-        if (file.originFileObj) {
-          formData.append('images', file.originFileObj);
-        }
+      // Handle images - both new and existing
+      const existingImages = getExistingImages();
+      const newImages = fileList.filter(file => file.originFileObj);
+
+      // Add existing images to formData
+      formData.append('existing_images', JSON.stringify(existingImages));
+
+      // Add new images to formData
+      newImages.forEach(file => {
+        formData.append('images', file.originFileObj);
       });
   
       // Log the data being sent (for debugging)
@@ -467,24 +478,25 @@ const Products = () => {
     }
   };
 
-  // Add this to your columns definition
   const columns = [
-    // ... other columns
+    {
+      title: 'S.No',
+      key: 'index',
+      width: 80,
+      render: (_, __, index) => index + 1,
+      sorter: (a, b) => a.sno - b.sno,
+    },
     {
       title: 'Image',
       dataIndex: 'images',
       key: 'images',
       render: (images) => {
         const imageList = images ? (Array.isArray(images) ? images : JSON.parse(images)) : [];
-        console.log('Image list:', imageList)
-         // For debugging
-        // console.log('Image list:', images)
         return imageList.length > 0 ? (
           <Image
             src={`http://localhost:9000${imageList[0]}`} 
             alt="Product" 
             style={{ width: '50px', height: '50px', objectFit: 'cover' }} 
-            // preview={true} 
           />
         ) : (
           <div style={{ width: '50px', height: '50px', background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -497,17 +509,31 @@ const Products = () => {
       title: 'Product Name',
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      filterSearch: true,
+      filters: [...new Set(products.map(p => ({ text: p.name, value: p.name })))],
+      onFilter: (value, record) => record.name.includes(value),
     },
     {
       title: 'Category',
-      dataIndex: 'category_id',
       key: 'category',
-      // render: (category) => category.name,
+      render: (record) => (
+        <Tag color="blue">
+          {record.category_name || 'N/A'}
+        </Tag>
+      ),
+      sorter: (a, b) => (a.category_name || '').localeCompare(b.category_name || ''),
+      filters: categories.map(cat => ({
+        text: cat.name,
+        value: cat.category_id
+      })),
+      onFilter: (value, record) => record.category_id === value,
     },
     {
       title: 'SKU',
       dataIndex: "sku",
       key: "sku",
+      sorter: (a, b) => a.sku.localeCompare(b.sku),
     },
     {
       title: "Price Details",
@@ -516,19 +542,20 @@ const Products = () => {
         <div>
           <div>MRP: ₹{record.mrp}</div>
           <div>Price: ₹{record.price}</div>
-          {/* <div>DP: ���{record.dp}</div> */}
-          {/* <div>PV: ���{record.pv}</div> */}
-          <div>Original Price:₹{record.original_price}</div>
+          <div>DP: ₹{record.dp}</div>
+          <div>PV: {record.pv}</div>
           {record.discount_percentage > 0 && (
             <Tag color="green">{record.discount_percentage}% off</Tag>
           )}
         </div>
       ),
+      sorter: (a, b) => a.price - b.price,
     },
     {
       title: "Stock",
       dataIndex: "stock",
       key: "stock",
+      sorter: (a, b) => a.stock - b.stock,
       render: (stock, record) => (
         <div>
           <div>{stock} units</div>
@@ -542,14 +569,15 @@ const Products = () => {
       title: "Size",
       dataIndex: "size",
       key: "size",
+      sorter: (a, b) => a.size.localeCompare(b.size),
     },
     {
       title: "Rating",
       dataIndex: "rating",
       key: "rating",
       render: rating => `${rating} ⭐`,
+      sorter: (a, b) => a.rating - b.rating,
     },
-    // In the columns definition, update the status column render function
     {
       title: "Status",
       dataIndex: "status",
@@ -559,6 +587,7 @@ const Products = () => {
           {status}
         </Tag>
       ),
+      sorter: (a, b) => a.status.localeCompare(b.status),
       filters: [
         { text: 'Active', value: 'Active' },
         { text: 'Inactive', value: 'Inactive' },
@@ -576,11 +605,11 @@ const Products = () => {
             icon={<EditOutlined />} 
             onClick={() => handleEdit(record)}
           />
-         <Button 
-  danger 
-  icon={<DeleteOutlined />} 
-  onClick={() => setDeleteConfirmation(record)}
-/>
+          <Button 
+            danger 
+            icon={<DeleteOutlined />} 
+            onClick={() => setDeleteConfirmation(record)}
+          />
         </Space>
       ),
     }
@@ -608,6 +637,15 @@ const Products = () => {
         dataSource={products}
         rowKey="product_id"
         loading={loading}
+        onChange={(pagination, filters, sorter) => {
+          console.log('Table params:', { pagination, filters, sorter });
+        }}
+        pagination={{
+          total: products.length,
+          showTotal: (total) => `Total ${total} products`,
+          showSizeChanger: true,
+          showQuickJumper: true,
+        }}
       />
 
       <Modal
@@ -900,6 +938,49 @@ const Products = () => {
                     <Form.Item name="dosage_hi" label="Dosage (Hindi)">
                       <TextArea rows={2} placeholder="e.g., भोजन के बाद दिन में दो बार 1 टैबलेट लें" />
                     </Form.Item>
+                  </>
+                ),
+              },
+              {
+                key: '7',
+                label: 'Related Products',
+                children: (
+                  <>
+                    <Title level={5}>Related Products</Title>
+                    <Form.List name="related_products">
+                      {(fields, { add, remove }) => (
+                        <>
+                          {fields.map(({ key, name, ...restField }) => (
+                            <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'product_id']}
+                                rules={[{ required: true, message: 'Please select a product' }]}
+                              >
+                                <Select
+                                  showSearch
+                                  placeholder="Select a product"
+                                  optionFilterProp="children"
+                                  style={{ width: 300 }}
+                                >
+                                  {products.filter(p => p.product_id !== editingProduct?.product_id).map(product => (
+                                    <Option key={product.product_id} value={product.product_id}>
+                                      {product.name}
+                                    </Option>
+                                  ))}
+                                </Select>
+                              </Form.Item>
+                              <DeleteOutlined onClick={() => remove(name)} />
+                            </Space>
+                          ))}
+                          <Form.Item>
+                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                              Add Related Product
+                            </Button>
+                          </Form.Item>
+                        </>
+                      )}
+                    </Form.List>
                   </>
                 ),
               }
