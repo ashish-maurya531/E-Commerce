@@ -4,7 +4,12 @@ const productController = {
   // Get all products
   getAllProducts: async (req, res) => {
     try {
-      const [products] = await db.query('SELECT * FROM products');
+      const [products] = await db.query(`
+        SELECT p.*, c.category_name as category_name 
+        FROM products p 
+        LEFT JOIN categories c ON p.category_id = c.category_id
+        ORDER BY p.sno DESC
+      `);
       
       if (!products.length) {
         return res.status(404).json({ message: "No products found" });
@@ -15,10 +20,16 @@ const productController = {
     }
   },
 
-  // Get single product by ID
+  // Get single product by ID 
   getProductById: async (req, res) => {
     try {
-      const [product] = await db.query('SELECT * FROM products WHERE product_id = ?', [req.params.id]);
+      const [product] = await db.query(`
+        SELECT p.*, c.category_name as category_name 
+        FROM products p 
+        LEFT JOIN categories c ON p.category_id = c.category_id 
+        WHERE p.product_id = ?
+      `, [req.params.id]);
+
       if (!product.length) {
         return res.status(404).json({ message: "Product not found" });
       }
@@ -31,88 +42,64 @@ const productController = {
   // Add new methods
   createProduct: async (req, res) => {
     try {
-      console.log('Received product data:', req.body);
-      console.log('Received files:', req.files);
-  
-      // Handle image uploads
-      let imageUrls = [];
-      if (req.files && req.files.length > 0) {
-        imageUrls = req.files.map(file => `/uploads/products/${file.filename}`);
+      const data = req.body;
+      
+      // Generate unique product ID if not provided
+      if (!data.product_id) {
+        data.product_id = `PRO-${Math.random().toString(36).substr(2, 8)}`;
       }
-  
-      // Validate required fields
-      if (!req.body.name || !req.body.category_id) {
-        return res.status(400).json({ message: "Product name and category are required" });
-      }
-  
-      // Generate a unique product ID
-      const uniqueId = Math.random().toString(16).substring(2, 10);
-      const product_id = `PRO-${uniqueId}`;
-  
-      // Calculate discount percentage if not provided
-      let discount_percentage = req.body.discount_percentage;
-      if (!discount_percentage && req.body.original_price && req.body.price) {
-        discount_percentage = Math.round(((req.body.original_price - req.body.price) / req.body.original_price) * 100);
-      }
-  
-      // Prepare the data
-      const productData = {
-        product_id,
-        category_id: req.body.category_id,
-        name: req.body.name,
-        sku: req.body.sku || null,
-        description_en: req.body.description_en || null,
-        description_hi: req.body.description_hi || null,
-        short_description_en: req.body.short_description_en || null,
-        short_description_hi: req.body.short_description_hi || null,
-        benefits: req.body.benefits ? JSON.stringify(req.body.benefits) : '[]',
-        dosage_en: req.body.dosage_en || null,
-        dosage_hi: req.body.dosage_hi || null,
-        mrp: req.body.mrp || 0,
-        dp: req.body.dp || 0,
-        pv: req.body.pv || 0,
-        price: req.body.price || 0,
-        original_price: req.body.original_price || null,
-        discount_percentage: discount_percentage || 0,
-        stock: req.body.stock || 0,
-        min_stock: req.body.min_stock || 10,
-        size: req.body.size || '',
-        images: JSON.stringify(imageUrls),
-        features: req.body.features ? JSON.stringify(req.body.features) : '[]',
-        specifications: req.body.specifications ? JSON.stringify(req.body.specifications) : '[]',
-        related_products: req.body.related_products ? JSON.stringify(req.body.related_products) : '[]',
-        rating: 0,
-        status: req.body.status || 'Active',
-        created_at: new Date(),
-        updated_at: new Date()
+
+      // Handle JSON fields - ensure proper JSON stringification
+      const jsonFields = {
+        benefits: Array.isArray(data.benefits) ? data.benefits : JSON.parse(data.benefits || '[]'),
+        features: Array.isArray(data.features) ? data.features : JSON.parse(data.features || '[]'),
+        specifications: Array.isArray(data.specifications) ? data.specifications : JSON.parse(data.specifications || '[]'),
+        related_products: Array.isArray(data.related_products) ? data.related_products : JSON.parse(data.related_products || '[]')
       };
-  
-      // Create placeholders and values array for the SQL query
-      const fields = Object.keys(productData);
-      const values = Object.values(productData);
-      const placeholders = fields.map(() => '?').join(', ');
-  
-      const query = `
-        INSERT INTO products (${fields.join(', ')})
-        VALUES (${placeholders})
-      `;
-  
-      const [result] = await db.query(query, values);
-      //update the count of products in category
-      await db.query(
-        `UPDATE categories SET category_products_count = category_products_count + 1 WHERE category_id =?`
-      ,[req.body.category_id]);
-      console.log('Product created:', result);
-  
-      res.status(201).json({ 
-        message: "Product created successfully", 
-        product_id: productData.product_id
+
+      // Convert JSON fields to strings for database storage
+      const processedData = {
+        ...data,
+        benefits: JSON.stringify(jsonFields.benefits),
+        features: JSON.stringify(jsonFields.features),
+        specifications: JSON.stringify(jsonFields.specifications),
+        related_products: JSON.stringify(jsonFields.related_products),
+        // Handle images array
+        images: JSON.stringify(req.files ? req.files.map(f => `/uploads/products/${f.filename}`) : [])
+      };
+
+      // Remove any undefined or null values
+      Object.keys(processedData).forEach(key => {
+        if (processedData[key] === undefined || processedData[key] === null) {
+          delete processedData[key];
+        }
       });
+
+      // Create SQL query with properly processed data
+      const [result] = await db.query(
+        'INSERT INTO products SET ?',
+        processedData
+      );
+
+      // Update category product count if needed
+      if (processedData.category_id) {
+        await db.query(
+          'UPDATE categories SET category_products_count = category_products_count + 1 WHERE category_id = ?',
+          [processedData.category_id]
+        );
+      }
+
+      res.status(201).json({
+        message: "Product created successfully",
+        product_id: processedData.product_id,
+        result
+      });
+
     } catch (error) {
       console.error('Create product error:', error);
-      res.status(500).json({ 
-        message: "Error creating product", 
-        error: error.message 
+      res.status(500).json({
+        message: "Error creating product",
+        error: error.message
       });
     }
   },
@@ -120,33 +107,128 @@ const productController = {
   updateProduct: async (req, res) => {
     try {
       const { id } = req.params;
-      const {
-        name, sku, description_en, description_hi, short_description_en,
-        short_description_hi, benefits, dosage_en, dosage_hi, mrp, dp,
-        pv, price, original_price, stock, min_stock, size, status
-      } = req.body;
+      const data = req.body;
 
-      const [result] = await db.query(
-        `UPDATE products SET
-          name = ?, sku = ?, description_en = ?, description_hi = ?,
-          short_description_en = ?, short_description_hi = ?, benefits = ?,
-          dosage_en = ?, dosage_hi = ?, mrp = ?, dp = ?, pv = ?,
-          price = ?, original_price = ?, stock = ?, min_stock = ?,
-          size = ?, status = ?
-        WHERE product_id = ?`,
-        [
-          name, sku, description_en, description_hi, short_description_en,
-          short_description_hi, benefits, dosage_en, dosage_hi, mrp, dp,
-          pv, price, original_price, stock, min_stock, size, status, id
-        ]
+      await db.query('START TRANSACTION');
+
+      // Get current product data
+      const [currentProduct] = await db.query(
+        'SELECT * FROM products WHERE product_id = ?', 
+        [id]
       );
 
-      if (result.affectedRows === 0) {
+      if (!currentProduct.length) {
+        await db.query('ROLLBACK');
         return res.status(404).json({ message: "Product not found" });
       }
 
-      res.json({ message: "Product updated successfully" });
+      const current = currentProduct[0];
+
+      // Handle images first
+      let currentImages;
+      try {
+        currentImages = JSON.parse(current.images || '[]');
+      } catch (e) {
+        currentImages = [];
+      }
+
+      let newImages = [];
+      if (req.files && req.files.length > 0) {
+        newImages = req.files.map(f => `/uploads/products/${f.filename}`);
+      }
+
+      // Handle existing images from form data
+      let existingImages = [];
+      if (data.existing_images) {
+        try {
+          existingImages = JSON.parse(data.existing_images);
+        } catch (e) {
+          existingImages = currentImages;
+        }
+      } else {
+        existingImages = currentImages;
+      }
+
+      // Combine all images
+      const allImages = [...existingImages, ...newImages];
+
+      // Create update data object
+      const updateData = {
+        name: data.name !== undefined ? data.name : current.name,
+        category_id: data.category_id !== undefined ? data.category_id : current.category_id,
+        sku: data.sku !== undefined ? data.sku : current.sku,
+        description_en: data.description_en !== undefined ? data.description_en : current.description_en,
+        description_hi: data.description_hi !== undefined ? data.description_hi : current.description_hi,
+        short_description_en: data.short_description_en !== undefined ? data.short_description_en : current.short_description_en,
+        short_description_hi: data.short_description_hi !== undefined ? data.short_description_hi : current.short_description_hi,
+        dosage_en: data.dosage_en !== undefined ? data.dosage_en : current.dosage_en,
+        dosage_hi: data.dosage_hi !== undefined ? data.dosage_hi : current.dosage_hi,
+        mrp: data.mrp !== undefined ? data.mrp : current.mrp,
+        dp: data.dp !== undefined ? data.dp : current.dp,
+        pv: data.pv !== undefined ? data.pv : current.pv,
+        price: data.price !== undefined ? data.price : current.price,
+        original_price: data.original_price !== undefined ? data.original_price : current.original_price,
+        discount_percentage: data.discount_percentage !== undefined ? data.discount_percentage : current.discount_percentage,
+        stock: data.stock !== undefined ? data.stock : current.stock,
+        min_stock: data.min_stock !== undefined ? data.min_stock : current.min_stock,
+        size: data.size !== undefined ? data.size : current.size,
+        status: data.status !== undefined ? data.status : current.status,
+        images: JSON.stringify(allImages)
+      };
+
+      // Handle JSON fields
+      const jsonFields = ['benefits', 'features', 'specifications', 'related_products'];
+      for (const field of jsonFields) {
+        if (data[field]) {
+          try {
+            const parsedData = typeof data[field] === 'string' ? 
+              JSON.parse(data[field]) : data[field];
+            updateData[field] = JSON.stringify(parsedData);
+          } catch (e) {
+            updateData[field] = current[field]; // Keep existing value if parsing fails
+          }
+        } else {
+          updateData[field] = current[field]; // Keep existing value if not provided
+        }
+      }
+
+      // Handle category change
+      if (data.category_id && data.category_id !== current.category_id) {
+        await db.query(
+          'UPDATE categories SET category_products_count = category_products_count - 1 WHERE category_id = ? AND category_products_count > 0',
+          [current.category_id]
+        );
+        await db.query(
+          'UPDATE categories SET category_products_count = category_products_count + 1 WHERE category_id = ?',
+          [data.category_id]
+        );
+      }
+
+      // Remove auto-generated fields
+      delete updateData.sno;
+      delete updateData.created_at;
+      delete updateData.updated_at;
+
+      // Perform update
+      const [result] = await db.query(
+        'UPDATE products SET ? WHERE product_id = ?',
+        [updateData, id]
+      );
+
+      if (result.affectedRows === 0) {
+        await db.query('ROLLBACK');
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      await db.query('COMMIT');
+
+      res.json({ 
+        message: "Product updated successfully",
+        images: allImages
+      });
+
     } catch (error) {
+      await db.query('ROLLBACK');
       console.error('Update product error:', error);
       res.status(500).json({ 
         message: "Error updating product", 
