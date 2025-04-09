@@ -167,7 +167,7 @@ const productController = {
         dp: data.dp !== undefined ? data.dp : current.dp,
         pv: data.pv !== undefined ? data.pv : current.pv,
         price: data.price !== undefined ? data.price : current.price,
-        original_price: data.original_price !== undefined ? data.original_price : current.original_price,
+        product_commission: data.product_commission !== undefined ? data.product_commission : current.product_commission,
         discount_percentage: data.discount_percentage !== undefined ? data.discount_percentage : current.discount_percentage,
         stock: data.stock !== undefined ? data.stock : current.stock,
         min_stock: data.min_stock !== undefined ? data.min_stock : current.min_stock,

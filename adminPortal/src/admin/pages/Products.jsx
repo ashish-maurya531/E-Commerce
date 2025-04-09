@@ -80,28 +80,8 @@ const Products = () => {
 
   const handleEdit = (record) => {
     try {
-      console.log('Editing product:', record);
       setEditingProduct(record);
       
-      // Safely parse JSON strings or use empty arrays as fallback
-      const parseJsonSafely = (jsonString) => {
-        try {
-          if (!jsonString) return [];
-          return typeof jsonString === 'string' ? JSON.parse(jsonString) : 
-                 Array.isArray(jsonString) ? jsonString : [];
-        } catch (error) {
-          console.warn('Error parsing JSON:', error);
-          return [];
-        }
-      };
-  
-      // Parse all array fields
-      const benefits = parseJsonSafely(record.benefits);
-      const features = parseJsonSafely(record.features);
-      const specifications = parseJsonSafely(record.specifications);
-      const related_products = parseJsonSafely(record.related_products);
-  
-      // Set all form fields with proper defaults
       const formData = {
         name: record.name || '',
         category_id: record.category_id,
@@ -110,10 +90,10 @@ const Products = () => {
         description_hi: record.description_hi || '',
         short_description_en: record.short_description_en || '',
         short_description_hi: record.short_description_hi || '',
-        benefits: benefits,
-        features: features,
-        specifications: specifications,
-        related_products: related_products,
+        benefits: record.benefits || [],
+        features: record.features || [],
+        specifications: record.specifications || [],
+        related_products: record.related_products || [],
         dosage_en: record.dosage_en || '',
         dosage_hi: record.dosage_hi || '',
         mrp: record.mrp || 0,
@@ -124,20 +104,13 @@ const Products = () => {
         min_stock: record.min_stock || 10,
         size: record.size || '',
         status: record.status || 'Active',
-        original_price: record.original_price || 0,
+        product_commission: record.product_commission || 0,
         discount_percentage: record.discount_percentage || 0
       };
-  
-      console.log('Setting form data:', formData);
-      
-      // Reset form and set values
+
       form.resetFields();
-      
-      // Make sure the form is reset before setting values
       setTimeout(() => {
         form.setFieldsValue(formData);
-        
-        // Handle images
         if (record.images) {
           try {
             const imageList = typeof record.images === 'string' 
@@ -170,6 +143,7 @@ const Products = () => {
       message.error('Failed to open edit modal');
     }
   };
+
   const formItems = [
     {
       name: 'name',
@@ -273,8 +247,9 @@ const Products = () => {
       component: <InputNumber min={0} />
     },
     {
-      name: 'original_price',
-      label: 'Original Price',
+      name: 'product_commission',
+      label: 'Commission',
+      rules: [{ required: true, message: 'Please enter commission' }],
       component: <InputNumber min={0} />
     },
     {
@@ -373,76 +348,62 @@ const Products = () => {
       setLoading(true);
       const formData = new FormData();
       
-      // Ensure all required fields are included with default value
-      const requiredFields = {
+      // Ensure all required fields are included with default values
+      const processedData = {
         name: values.name,
         category_id: values.category_id,
         sku: values.sku || '',
-        mrp: values.mrp || 0,
-        price: values.price || 0,
-        dp: values.dp || 0,
-        pv: values.pv || 0,
-        stock: values.stock || 0,
-        min_stock: values.min_stock || 10,
-        size: values.size || '',
-        status: values.status || 'Active', // Default to 'Active' if undefined
-      };
-  
-      // Add all required fields to formData
-      Object.keys(requiredFields).forEach(key => {
-        formData.append(key, requiredFields[key]);
-      });
-  
-      // Handle JSON fields properly - stringify them without escaping
-      const jsonFields = {
-        benefits: values.benefits || [],
-        features: values.features || [],
-        specifications: values.specifications || [],
-        related_products: values.related_products?.map(item => ({
-          product_id: item.product_id,
-          name: products.find(p => p.product_id === item.product_id)?.name || ''
-        })) || []
-      };
-  
-      // Add JSON fields to formData with proper formatting
-      Object.keys(jsonFields).forEach(key => {
-        formData.append(key, JSON.stringify(jsonFields[key]));
-      });
-  
-      // Add optional fields if they exist
-      const optionalFields = {
         description_en: values.description_en || '',
         description_hi: values.description_hi || '',
         short_description_en: values.short_description_en || '',
         short_description_hi: values.short_description_hi || '',
         dosage_en: values.dosage_en || '',
         dosage_hi: values.dosage_hi || '',
-        original_price: values.original_price || 0,
-        discount_percentage: values.discount_percentage || 0
+        mrp: values.mrp || 0,
+        price: values.price || 0,
+        dp: values.dp || 0,
+        pv: values.pv || 0,
+        product_commission: values.product_commission || 0,
+        discount_percentage: values.discount_percentage || 0,
+        stock: values.stock || 0,
+        min_stock: values.min_stock || 10,
+        size: values.size || '',
+        status: values.status || 'Active',
       };
-  
-      // Add optional fields to formData
-      Object.keys(optionalFields).forEach(key => {
-        formData.append(key, optionalFields[key]);
-      });
-  
-      // Handle images - both new and existing
-      const existingImages = getExistingImages();
-      const newImages = fileList.filter(file => file.originFileObj);
 
-      // Add existing images to formData
-      formData.append('existing_images', JSON.stringify(existingImages));
-
-      // Add new images to formData
-      newImages.forEach(file => {
-        formData.append('images', file.originFileObj);
+      // Add all processed data to formData
+      Object.keys(processedData).forEach(key => {
+        formData.append(key, processedData[key]);
       });
-  
-      // Log the data being sent (for debugging)
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
+
+      // Handle JSON fields
+      if (values.benefits) {
+        formData.append('benefits', JSON.stringify(values.benefits));
       }
-  
+      if (values.features) {
+        formData.append('features', JSON.stringify(values.features));
+      }
+      if (values.specifications) {
+        formData.append('specifications', JSON.stringify(values.specifications));
+      }
+      if (values.related_products) {
+        formData.append('related_products', JSON.stringify(values.related_products));
+      }
+
+      // Handle existing images
+      const existingImages = getExistingImages();
+      if (existingImages.length > 0) {
+        formData.append('existing_images', JSON.stringify(existingImages));
+      }
+
+      // Handle new images
+      fileList.forEach(file => {
+        if (file.originFileObj) {
+          formData.append('images', file.originFileObj);
+        }
+      });
+
+      // Make API call based on whether we're editing or creating
       if (editingProduct) {
         await productService.updateProduct(editingProduct.product_id, formData);
         message.success('Product updated successfully');
@@ -450,11 +411,16 @@ const Products = () => {
         await productService.createProduct(formData);
         message.success('Product created successfully');
       }
-  
+
+      // Reset form and close modal
       setIsModalVisible(false);
       form.resetFields();
       setFileList([]);
+      setEditingProduct(null);
+      
+      // Refresh products list
       fetchProducts();
+
     } catch (error) {
       console.error('Operation failed:', error);
       message.error('Operation failed: ' + (error.response?.data?.message || error.message));
@@ -544,6 +510,7 @@ const Products = () => {
           <div>Price: ₹{record.price}</div>
           <div>DP: ₹{record.dp}</div>
           <div>PV: {record.pv}</div>
+          <div>Commission: ₹{record.product_commission}</div>
           {record.discount_percentage > 0 && (
             <Tag color="green">{record.discount_percentage}% off</Tag>
           )}
@@ -664,6 +631,11 @@ const Products = () => {
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
+          initialValues={{
+            status: 'Active',
+            min_stock: 10,
+            discount_percentage: 0
+          }}
         >
           <Tabs
             items={[
@@ -808,6 +780,26 @@ const Products = () => {
                       rules={[{ required: true }]}
                     >
                       <InputNumber min={0} className="w-full" />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="product_commission"
+                      label="Commission"
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber
+                        min={0}
+                        className="w-full"
+                        formatter={value => `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        parser={value => value.replace(/₹\s?|(,*)/g, '')}
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="discount_percentage"
+                      label="Discount %"
+                    >
+                      <InputNumber min={0} max={100} className="w-full" />
                     </Form.Item>
                   </>
                 ),
