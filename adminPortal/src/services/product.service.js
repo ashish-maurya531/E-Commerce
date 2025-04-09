@@ -41,6 +41,6 @@ const productService = {
   createProduct,
   updateProduct,
   deleteProduct
-}
+};
 
-export default productService
+export default productService;

@@ -1,7 +1,9 @@
-import { Layout, Typography, Steps, Form, Input, Button, Row, Col, Card, Divider, Radio, Space, List } from "antd"
-import { useState,useEffect } from "react"
+import { Layout, Typography, Steps, Form, Input, Button, Row, Col, Card, Divider, Radio, Space, List, message } from "antd"
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom" // Replace useRouter with useNavigate
 import Header from "../components/Header"
 import Footer from "../components/Footer"
+import orderService from "../services/order.service"
 
 const { Content } = Layout
 const { Title, Text } = Typography
@@ -9,6 +11,9 @@ const { Step } = Steps
 
 const CheckoutPage = () => {
   const [current, setCurrent] = useState(0)
+  const [formData, setFormData] = useState({})
+  const [paymentMethod, setPaymentMethod] = useState(null)
+  const navigate = useNavigate() // Replace router with navigate
 
   const next = () => {
     setCurrent(current + 1)
@@ -17,9 +22,11 @@ const CheckoutPage = () => {
   const prev = () => {
     setCurrent(current - 1)
   }
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo(0, 0)
+  }, [])
+
   // Sample cart items
   const cartItems = [
     {
@@ -36,11 +43,41 @@ const CheckoutPage = () => {
   const shipping = 99
   const total = subtotal + shipping
 
+  const handlePlaceOrder = async () => {
+    try {
+      const orderData = {
+        user_id: 1, // Replace with actual user ID
+        customer_name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        address: `${formData.address}, ${formData.city}, ${formData.state} ${formData.pincode}`,
+        payment_method: paymentMethod,
+        items: cartItems.map(item => ({
+          product_id: item.id,
+          quantity: item.quantity,
+          mrp: item.price,
+          dp: item.price,
+          pv: 0, // Replace with actual PV if applicable
+          price: item.price
+        }))
+      }
+
+      const response = await orderService.createOrder(orderData)
+      message.success('Order placed successfully!')
+      navigate(`/order-confirmation/${response.orderId}`) // Use navigate instead of router.push
+    } catch (error) {
+      message.error('Failed to place order. Please try again.')
+    }
+  }
+
   const steps = [
     {
       title: "Shipping",
       content: (
-        <Form layout="vertical">
+        <Form
+          layout="vertical"
+          onValuesChange={(changedValues, allValues) => setFormData(allValues)}
+        >
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="First Name" name="firstName" rules={[{ required: true }]}>
@@ -89,7 +126,10 @@ const CheckoutPage = () => {
       title: "Payment",
       content: (
         <div>
-          <Form layout="vertical">
+          <Form
+            layout="vertical"
+            onValuesChange={(changedValues) => setPaymentMethod(changedValues.paymentMethod)}
+          >
             <Form.Item label="Payment Method" name="paymentMethod" rules={[{ required: true }]}>
               <Radio.Group>
                 <Space direction="vertical">
@@ -149,7 +189,7 @@ const CheckoutPage = () => {
             <Button style={{ marginRight: 8 }} onClick={prev}>
               Back
             </Button>
-            <Button type="primary" onClick={next}>
+            <Button type="primary" onClick={handlePlaceOrder}>
               Place Order
             </Button>
           </div>

@@ -49,17 +49,25 @@ const Users = () => {
 
   const handleSubmit = async (values) => {
     try {
+      // Ensure role is included in values
+      const userData = {
+        ...values,
+        role: values.role || (editingUser ? editingUser.role : 'user') // Default to 'user' for new users
+      };
+
       if (editingUser) {
-        await userService.updateUser(editingUser.id, values)
-        message.success("User updated successfully")
+        await userService.updateUser(editingUser.id, userData);
+        message.success("User updated successfully");
       } else {
-        await userService.createUser(values)
-        message.success("User added successfully")
+        await userService.createUser(userData);
+        message.success("User added successfully");
       }
-      setIsModalVisible(false)
-      fetchUsers()
+      setIsModalVisible(false);
+      form.resetFields();
+      fetchUsers();
     } catch (error) {
-      message.error(error.response?.data?.message || "Operation failed")
+      console.error('Operation error:', error);
+      message.error(error.response?.data?.message || "Operation failed");
     }
   }
 
@@ -119,7 +127,7 @@ const Users = () => {
           <Button
             icon={<EditOutlined />}
             onClick={() => {
-              setEditingUser(record)
+              setEditingUser(record);
               form.setFieldsValue({
                 firstname: record.firstname,
                 lastname: record.lastname,
@@ -129,10 +137,10 @@ const Users = () => {
                 city: record.city,
                 state: record.state,
                 pincode: record.pincode,
-                role: record.role,
+                role: record.role, // Make sure role is included
                 status: record.status,
-              })
-              setIsModalVisible(true)
+              });
+              setIsModalVisible(true);
             }}
           />
           <Button
@@ -179,7 +187,7 @@ const Users = () => {
         />
 
         <Modal
-          title={editingUser ? "Edit User" : "Add User"}
+          title={editingUser ? `Edit Details` : `Add`}
           open={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
           onOk={() => form.submit()}
@@ -253,8 +261,17 @@ const Users = () => {
             >
               <Input />
             </Form.Item>
-           
-          
+            <Form.Item
+              name="role"
+              label="Role"
+              rules={[{ required: true, message: "Please select role" }]}
+            >
+              <Select>
+                <Option value="admin">Admin</Option>
+                <Option value="user">User</Option>
+                <Option value="distributer">Distributor</Option>
+              </Select>
+            </Form.Item>
             <Form.Item
               name="status"
               label="Status"

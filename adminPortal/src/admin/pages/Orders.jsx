@@ -12,7 +12,7 @@ import {
   Steps,
   Card,
   Typography,
-  Row,
+  Row, 
   Col,
   Select,
   DatePicker,
@@ -35,10 +35,12 @@ const Orders = () => {
   const orders = [
     {
       id: "ORD-12345",
-      customer: "Rahul Sharma",
+      customer_name: "Rahul Sharma",
       email: "rahul@example.com",
       date: "2023-03-15 14:30",
-      amount: 2499,
+      total_mrp: 3000,
+      total_dp: 2499,
+      total_pv: 100,
       payment: "Credit Card",
       status: "Delivered",
       items: [
@@ -50,10 +52,12 @@ const Orders = () => {
     },
     {
       id: "ORD-12346",
-      customer: "Priya Mehta",
+      customer_name: "Priya Mehta",
       email: "priya@example.com",
       date: "2023-03-15 13:45",
-      amount: 1899,
+      total_mrp: 2000,
+      total_dp: 1899,
+      total_pv: 80,
       payment: "UPI",
       status: "Processing",
       items: [
@@ -65,10 +69,12 @@ const Orders = () => {
     },
     {
       id: "ORD-12347",
-      customer: "Ahmed Khan",
+      customer_name: "Ahmed Khan",
       email: "ahmed@example.com",
       date: "2023-03-15 12:20",
-      amount: 3299,
+      total_mrp: 3500,
+      total_dp: 3299,
+      total_pv: 120,
       payment: "Net Banking",
       status: "Shipped",
       items: [
@@ -80,10 +86,12 @@ const Orders = () => {
     },
     {
       id: "ORD-12348",
-      customer: "Sneha Patel",
+      customer_name: "Sneha Patel",
       email: "sneha@example.com",
       date: "2023-03-15 11:15",
-      amount: 999,
+      total_mrp: 1200,
+      total_dp: 999,
+      total_pv: 50,
       payment: "Cash on Delivery",
       status: "Pending",
       items: [
@@ -95,10 +103,12 @@ const Orders = () => {
     },
     {
       id: "ORD-12349",
-      customer: "Vikram Singh",
+      customer_name: "Vikram Singh",
       email: "vikram@example.com",
       date: "2023-03-15 10:30",
-      amount: 1499,
+      total_mrp: 1600,
+      total_dp: 1499,
+      total_pv: 60,
       payment: "Credit Card",
       status: "Delivered",
       items: [{ id: 9, name: "Special Edition Attar", price: 1499, quantity: 1 }],
@@ -107,97 +117,101 @@ const Orders = () => {
     },
   ]
 
+  // Get color for status
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Delivered":
+        return "success"
+      case "Processing":
+        return "processing"
+      case "Shipped":
+        return "warning"
+      case "Pending":
+        return "default"
+      case "Cancelled":
+        return "error"
+      default:
+        return "default"
+    }
+  }
+
+  // Handle view order
+  const viewOrder = (order) => {
+    setSelectedOrder(order)
+    setIsModalVisible(true)
+  }
+
+  // Handle update status
+  const updateStatus = (orderId, status) => {
+    console.log(`Updating order ${orderId} to status ${status}`)
+    message.success(`Order ${orderId} status updated to ${status}`)
+  }
+
   // Table columns
   const columns = [
     {
       title: "Order ID",
       dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id.localeCompare(b.id),
+      key: "id"
     },
     {
       title: "Customer",
-      dataIndex: "customer",
-      key: "customer",
-      sorter: (a, b) => a.customer.localeCompare(b.customer),
+      dataIndex: "customer_name",
+      key: "customer"
     },
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
-      sorter: (a, b) => new Date(a.date) - new Date(b.date),
-    },
-    {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
-      sorter: (a, b) => a.amount - b.amount,
-      render: (amount) => `₹${amount}`,
-    },
-    {
-      title: "Payment Method",
-      dataIndex: "payment",
-      key: "payment",
+      title: "Order Value",
+      children: [
+        {
+          title: "MRP Total",
+          dataIndex: "total_mrp",
+          key: "mrp",
+          render: value => `₹${value}`
+        },
+        {
+          title: "DP Total",
+          dataIndex: "total_dp",
+          key: "dp",
+          render: value => `₹${value}`
+        },
+        {
+          title: "PV Total",
+          dataIndex: "total_pv",
+          key: "pv"
+        }
+      ]
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => {
-        let color = ""
-        switch (status) {
-          case "Delivered":
-            color = "success"
-            break
-          case "Processing":
-            color = "processing"
-            break
-          case "Shipped":
-            color = "warning"
-            break
-          case "Pending":
-            color = "default"
-            break
-          case "Cancelled":
-            color = "error"
-            break
-          default:
-            color = "default"
-        }
-        return <Tag color={color}>{status}</Tag>
-      },
-      filters: [
-        { text: "Delivered", value: "Delivered" },
-        { text: "Processing", value: "Processing" },
-        { text: "Shipped", value: "Shipped" },
-        { text: "Pending", value: "Pending" },
-        { text: "Cancelled", value: "Cancelled" },
-      ],
-      onFilter: (value, record) => record.status === value,
+      render: status => (
+        <Tag color={getStatusColor(status)}>{status}</Tag>
+      )
     },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <Space size="small">
-          <Button type="primary" icon={<EyeOutlined />} size="small" onClick={() => handleViewOrder(record)} />
-          <Button icon={<PrinterOutlined />} size="small" onClick={() => handlePrintOrder(record.id)} />
+        <Space>
+          <Button type="primary" onClick={() => viewOrder(record)}>
+            View
+          </Button>
+          <Select
+            value={record.status}
+            onChange={(value) => updateStatus(record.id, value)}
+            disabled={record.status === 'Delivered' || record.status === 'Cancelled'}
+          >
+            <Option value="Pending">Pending</Option>
+            <Option value="Processing">Processing</Option>
+            <Option value="Shipped">Shipped</Option>
+            <Option value="Delivered">Delivered</Option>
+            <Option value="Cancelled">Cancelled</Option>
+          </Select>
         </Space>
-      ),
-    },
+      )
+    }
   ]
-
-  // Handle view order
-  const handleViewOrder = (order) => {
-    setSelectedOrder(order)
-    setIsModalVisible(true)
-  }
-
-  // Handle print order
-  const handlePrintOrder = (orderId) => {
-    console.log("Printing order:", orderId)
-    message.success(`Order ${orderId} sent to printer`)
-  }
 
   // Get current step based on status
   const getOrderStep = (status) => {
@@ -317,7 +331,7 @@ const Orders = () => {
               <Col span={12}>
                 <Card title="Customer Information" style={{ marginBottom: 16 }}>
                   <Descriptions column={1} size="small">
-                    <Descriptions.Item label="Name">{selectedOrder.customer}</Descriptions.Item>
+                    <Descriptions.Item label="Name">{selectedOrder.customer_name}</Descriptions.Item>
                     <Descriptions.Item label="Email">{selectedOrder.email}</Descriptions.Item>
                     <Descriptions.Item label="Phone">{selectedOrder.phone}</Descriptions.Item>
                     <Descriptions.Item label="Shipping Address">{selectedOrder.address}</Descriptions.Item>
@@ -397,7 +411,7 @@ const Orders = () => {
                       <Text strong>Subtotal:</Text>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1}>
-                      <Text strong>₹{selectedOrder.amount}</Text>
+                      <Text strong>₹{selectedOrder.total_dp}</Text>
                     </Table.Summary.Cell>
                   </Table.Summary.Row>
                 )}

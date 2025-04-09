@@ -3,21 +3,14 @@ const db = require('../config/database');
 const orderController = {
   getAllOrders: async (req, res) => {
     try {
-      console.log('[DB] Fetching all orders');
       const [orders] = await db.query(`
-        SELECT o.*, 
-               COUNT(oi.id) as items_count,
-               u.name as user_name
+        SELECT o.*, u.name as user_name
         FROM orders o
-        LEFT JOIN order_items oi ON o.id = oi.order_id
         LEFT JOIN users u ON o.user_id = u.id
-        GROUP BY o.id
         ORDER BY o.created_at DESC
       `);
-      console.log(`[DB] Successfully fetched ${orders.length} orders`);
       res.json(orders);
     } catch (error) {
-      console.error('[DB Error] Failed to fetch orders:', error);
       res.status(500).json({ message: "Server error", error: error.message });
     }
   },
@@ -54,106 +47,124 @@ const orderController = {
 
   createOrder: async (req, res) => {
     const connection = await db.getConnection();
-    console.log('[DB] Starting order creation transaction');
     try {
       await connection.beginTransaction();
-
+      
       const {
-        user_id, customer_name, email, phone,
-        address, payment_method, items
+        user_id,
+        customer_name,
+        email,
+        phone,
+        address,
+        payment_method,
+        items
       } = req.body;
 
-      // Calculate total amount
-      let totalAmount = 0;
+      // Calculate totals
+      let total_mrp = 0;
+      let total_dp = 0;
+      let total_pv = 0;
+      let total_amount = 0;
+
+      // Verify stock and calculate totals
       for (const item of items) {
-        console.log(`[DB] Checking stock for product ID: ${item.product_id}`);
         const [product] = await connection.query(
-          'SELECT price, stock FROM products WHERE id = ?',
+          'SELECT * FROM products WHERE product_id = ?',
           [item.product_id]
         );
 
         if (!product.length || product[0].stock < item.quantity) {
-          console.log(`[DB] Insufficient stock for product ID: ${item.product_id}`);
           throw new Error(`Insufficient stock for product ID ${item.product_id}`);
         }
 
-        totalAmount += product[0].price * item.quantity;
+        total_mrp += product[0].mrp * item.quantity;
+        total_dp += product[0].dp * item.quantity;
+        total_pv += product[0].pv * item.quantity;
+        total_amount += product[0].price * item.quantity;
       }
 
       // Create order
       const orderId = `ORD-${Date.now()}`;
-      console.log(`[DB] Creating new order with ID: ${orderId}`);
       await connection.query(
-        `INSERT INTO orders (
-          id, user_id, customer_name, email, phone,
-          address, amount, payment_method
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [orderId, user_id, customer_name, email, phone,
-         address, totalAmount, payment_method]
+        `INSERT INTO orders SET ?`,
+        {
+          id: orderId,
+          user_id,
+          customer_name,
+          email,
+          phone,
+          address,
+          total_mrp,
+          total_dp,
+          total_pv,
+          total_amount,
+          payment_method,
+          status: 'Pending'
+        }
       );
 
-      // Create order items and update inventory
+      // Create order items and update stock
       for (const item of items) {
-        console.log(`[DB] Processing item: ${item.product_id}, Quantity: ${item.quantity}`);
         await connection.query(
-          `INSERT INTO order_items (
-            order_id, product_id, quantity, price
-          ) VALUES (?, ?, ?, (
-            SELECT price FROM products WHERE id = ?
-          ))`,
-          [orderId, item.product_id, item.quantity, item.product_id]
+          `INSERT INTO order_items SET ?`,
+          {
+            order_id: orderId,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            mrp: item.mrp,
+            dp: item.dp,
+            pv: item.pv,
+            price: item.price
+          }
         );
 
-        console.log(`[DB] Updating stock for product: ${item.product_id}`);
+        // Update stock
         await connection.query(
           `UPDATE products 
-           SET stock = stock - ?
-           WHERE id = ?`,
+           SET stock = stock - ? 
+           WHERE product_id = ?`,
           [item.quantity, item.product_id]
-        );
-
-        console.log(`[DB] Recording inventory transaction for product: ${item.product_id}`);
-        await connection.query(
-          `INSERT INTO inventory_transactions (
-            product_id, type, quantity, reference_id, notes
-          ) VALUES (?, 'OUT', ?, ?, 'Order deduction')`,
-          [item.product_id, item.quantity, orderId]
         );
       }
 
       await connection.commit();
-      console.log(`[DB] Order creation completed successfully: ${orderId}`);
       res.status(201).json({
         message: "Order created successfully",
         orderId
       });
     } catch (error) {
-      console.error('[DB Error] Order creation failed:', error);
       await connection.rollback();
       res.status(500).json({ message: "Server error", error: error.message });
     } finally {
       connection.release();
-      console.log('[DB] Connection released');
     }
   },
 
   updateOrderStatus: async (req, res) => {
+    const connection = await db.getConnection();
     try {
+      await connection.beginTransaction();
+
       const { id } = req.params;
       const { status } = req.body;
 
-      const [result] = await db.query(
+      // Update order status
+      const [result] = await connection.query(
         'UPDATE orders SET status = ? WHERE id = ?',
         [status, id]
       );
 
       if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "Order not found" });
+        throw new Error("Order not found");
       }
 
+      await connection.commit();
       res.json({ message: "Order status updated successfully" });
     } catch (error) {
+      await connection.rollback();
       res.status(500).json({ message: "Server error", error: error.message });
+    } finally {
+      connection.release();
     }
   },
 
