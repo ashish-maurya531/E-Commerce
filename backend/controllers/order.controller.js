@@ -4,9 +4,10 @@ const orderController = {
   getAllOrders: async (req, res) => {
     try {
       const [orders] = await db.query(`
-        SELECT o.*, u.name as user_name
-        FROM orders o
-        LEFT JOIN users u ON o.user_id = u.id
+        SELECT o.*, 
+               CONCAT(u.firstname, ' ', u.lastname) as user_name 
+        FROM orders o 
+        LEFT JOIN usersdetails u ON o.user_id = u.id
         ORDER BY o.created_at DESC
       `);
       res.json(orders);
@@ -14,33 +15,62 @@ const orderController = {
       res.status(500).json({ message: "Server error", error: error.message });
     }
   },
-
+   
   getOrderById: async (req, res) => {
     try {
-      console.log(`[DB] Fetching order with ID: ${req.params.id}`);
-      const [order] = await db.query(
-        `SELECT * FROM orders WHERE id = ?`,
-        [req.params.id]
-      );
+      const [order] = await db.query(`
+        SELECT o.*, 
+               CONCAT(u.firstname, ' ', u.lastname) as user_name,
+               u.email as user_email,
+               u.phoneno as user_phone
+        FROM orders o
+        LEFT JOIN usersdetails u ON o.user_id = u.id
+        WHERE o.id = ?
+      `, [req.params.id]);
 
       if (!order.length) {
-        console.log(`[DB] Order not found with ID: ${req.params.id}`);
         return res.status(404).json({ message: "Order not found" });
       }
 
-      console.log(`[DB] Fetching items for order: ${req.params.id}`);
-      const [items] = await db.query(
-        `SELECT oi.*, p.name, p.sku
-         FROM order_items oi
-         JOIN products p ON oi.product_id = p.id
-         WHERE oi.order_id = ?`,
-        [req.params.id]
-      );
+      // Get order items with product details
+      const [items] = await db.query(`
+        SELECT oi.*, p.name as product_name, p.size, p.images
+        FROM order_items oi
+        LEFT JOIN products p ON oi.product_id = p.product_id
+        WHERE oi.order_id = ?
+      `, [req.params.id]);
 
-      console.log(`[DB] Successfully fetched order and ${items.length} items`);
-      res.json({ ...order[0], items });
+      order[0].items = items;
+      res.json(order[0]);
     } catch (error) {
-      console.error('[DB Error] Failed to fetch order:', error);
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  },
+
+  getUserOrderHistory: async (req, res) => {
+    try {
+      const [orders] = await db.query(`
+        SELECT o.*, 
+               CONCAT(u.firstname, ' ', u.lastname) as user_name
+        FROM orders o
+        LEFT JOIN usersdetails u ON o.user_id = u.id
+        WHERE o.user_id = ?
+        ORDER BY o.created_at DESC
+      `, [req.user.id]);
+
+      // Get items for each order with product details
+      for (let order of orders) {
+        const [items] = await db.query(`
+          SELECT oi.*, p.name as product_name, p.size, p.images
+          FROM order_items oi
+          LEFT JOIN products p ON oi.product_id = p.product_id
+          WHERE oi.order_id = ?
+        `, [order.id]);
+        order.items = items;
+      }
+
+      res.json(orders);
+    } catch (error) {
       res.status(500).json({ message: "Server error", error: error.message });
     }
   },
@@ -57,14 +87,27 @@ const orderController = {
         phone,
         address,
         payment_method,
-        items
+        items // Now only need product_id and quantity from client
       } = req.body;
+
+      // Validate user exists
+      const [user] = await connection.query(
+        'SELECT * FROM usersdetails WHERE id = ?',
+        [user_id]
+      );
+
+      if (!user.length) {
+        throw new Error('User not found');
+      }
 
       // Calculate totals
       let total_mrp = 0;
       let total_dp = 0;
       let total_pv = 0;
       let total_amount = 0;
+      
+      // Store processed items with product details
+      let processedItems = [];
 
       // Verify stock and calculate totals
       for (const item of items) {
@@ -77,10 +120,22 @@ const orderController = {
           throw new Error(`Insufficient stock for product ID ${item.product_id}`);
         }
 
-        total_mrp += product[0].mrp * item.quantity;
-        total_dp += product[0].dp * item.quantity;
-        total_pv += product[0].pv * item.quantity;
-        total_amount += product[0].price * item.quantity;
+        // Use product prices from database
+        const productData = product[0];
+        total_mrp += productData.mrp * item.quantity;
+        total_dp += productData.dp * item.quantity;
+        total_pv += productData.pv * item.quantity;
+        total_amount += productData.price * item.quantity;
+
+        // Store processed item with correct prices
+        processedItems.push({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          mrp: productData.mrp,
+          dp: productData.dp,
+          pv: productData.pv,
+          price: productData.price
+        });
       }
 
       // Create order
@@ -99,12 +154,14 @@ const orderController = {
           total_pv,
           total_amount,
           payment_method,
-          status: 'Pending'
+          status: 'Pending',
+          created_at: new Date(),
+          updated_at: new Date()
         }
       );
 
-      // Create order items and update stock
-      for (const item of items) {
+      // Create order items and update stock using processed items
+      for (const item of processedItems) {
         await connection.query(
           `INSERT INTO order_items SET ?`,
           {
@@ -120,18 +177,35 @@ const orderController = {
 
         // Update stock
         await connection.query(
-          `UPDATE products 
-           SET stock = stock - ? 
-           WHERE product_id = ?`,
+          `UPDATE products SET stock = stock - ? WHERE product_id = ?`,
           [item.quantity, item.product_id]
         );
       }
 
       await connection.commit();
-      res.status(201).json({
-        message: "Order created successfully",
-        orderId
-      });
+
+      // Fetch the complete order details for response
+      const [orderDetails] = await connection.query(`
+        SELECT o.*, 
+               CONCAT(u.firstname, ' ', u.lastname) as user_name,
+               u.email as user_email,
+               u.phoneno as user_phone
+        FROM orders o
+        LEFT JOIN usersdetails u ON o.user_id = u.id
+        WHERE o.id = ?
+      `, [orderId]);
+
+      // Fetch order items with product details
+      const [orderItems] = await connection.query(`
+        SELECT oi.*, p.name as product_name, p.size, p.images
+        FROM order_items oi
+        LEFT JOIN products p ON oi.product_id = p.product_id
+        WHERE oi.order_id = ?
+      `, [orderId]);
+
+      orderDetails[0].items = orderItems;
+
+      res.status(201).json(orderDetails[0]);
     } catch (error) {
       await connection.rollback();
       res.status(500).json({ message: "Server error", error: error.message });
@@ -148,7 +222,6 @@ const orderController = {
       const { id } = req.params;
       const { status } = req.body;
 
-      // Update order status
       const [result] = await connection.query(
         'UPDATE orders SET status = ? WHERE id = ?',
         [status, id]
@@ -174,66 +247,40 @@ const orderController = {
       await connection.beginTransaction();
 
       const { id } = req.params;
-      const userId = req.user.id; // From auth middleware
-
-      // Check if order exists and belongs to user
-      const [order] = await connection.query(
-        'SELECT * FROM orders WHERE id = ? AND (user_id = ? OR ? = true)',
-        [id, userId, req.user.role === 'admin']
-      );
-
-      if (!order.length) {
-        return res.status(404).json({ message: "Order not found or unauthorized" });
-      }
-
-      if (order[0].status === 'Cancelled') {
-        return res.status(400).json({ message: "Order is already cancelled" });
-      }
-
-      if (!['Pending', 'Processing'].includes(order[0].status)) {
-        return res.status(400).json({ 
-          message: "Cannot cancel order in current status" 
-        });
-      }
 
       // Get order items to restore stock
       const [items] = await connection.query(
-        'SELECT product_id, quantity FROM order_items WHERE order_id = ?',
+        'SELECT * FROM order_items WHERE order_id = ?',
         [id]
       );
 
       // Restore stock for each item
       for (const item of items) {
         await connection.query(
-          'UPDATE products SET stock = stock + ? WHERE id = ?',
+          'UPDATE products SET stock = stock + ? WHERE product_id = ?',
           [item.quantity, item.product_id]
-        );
-
-        // Record inventory transaction
-        await connection.query(
-          `INSERT INTO inventory_transactions (
-            product_id, type, quantity, reference_id, notes
-          ) VALUES (?, 'IN', ?, ?, 'Order cancellation')`,
-          [item.product_id, item.quantity, id]
         );
       }
 
       // Update order status
-      await connection.query(
-        'UPDATE orders SET status = "Cancelled", updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-        [id]
+      const [result] = await connection.query(
+        'UPDATE orders SET status = ? WHERE id = ?',
+        ['Cancelled', id]
       );
+
+      if (result.affectedRows === 0) {
+        throw new Error("Order not found");
+      }
 
       await connection.commit();
       res.json({ message: "Order cancelled successfully" });
     } catch (error) {
       await connection.rollback();
-      console.error('Error cancelling order:', error);
       res.status(500).json({ message: "Server error", error: error.message });
     } finally {
       connection.release();
     }
-  },
+  }
 };
 
 module.exports = orderController;

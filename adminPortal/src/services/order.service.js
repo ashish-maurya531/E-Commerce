@@ -1,8 +1,8 @@
 import api from './api'
 
 const orderService = {
-  getAllOrders: async (params) => {
-    const response = await api.get('/orders', { params })
+  getAllOrders: async () => {
+    const response = await api.get('/orders')
     return response.data
   },
 
@@ -11,17 +11,16 @@ const orderService = {
     return response.data
   },
 
-  updateOrderStatus: async (id, status) => {
-    const response = await api.put(`/orders/${id}/status`, { status })
+  updateOrderStatus: async (orderId, status) => {
+    const response = await api.put(`/orders/${orderId}/status`, { status })
     return response.data
   },
 
-  cancelOrder: async (id) => {
-    const response = await api.put(`/orders/${id}/cancel`)
+  cancelOrder: async (orderId) => {
+    const response = await api.put(`/orders/${orderId}/cancel`)
     return response.data
   }
 }
 
 export default orderService
 
- 
